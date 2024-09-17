@@ -16,11 +16,9 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
-      <body className="font-geist flex-col flex h-screen">
+      <body className="flex h-screen flex-col font-geist">
         <Navbar />
-        <div className="flex-grow p-4">
-          {children}
-        </div>
+        <div className="flex-grow p-4">{children}</div>
       </body>
     </html>
   )

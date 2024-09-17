@@ -13,7 +13,7 @@ function Logo() {
 
 export function Navbar() {
   return (
-    <div className="py-2 px-4 flex">
+    <div className="flex px-4 py-2">
       <Logo />
       <div className="ml-auto">
         <User />
@@ -24,20 +24,11 @@ export function Navbar() {
 
 async function User() {
   const user = await getServerUser()
-  if (user)
-    return (
-      <div>
-        {user.name}
-      </div>
-    )
+  if (user) return <div>{user.name}</div>
 
   return (
     <Link href="/login">
-      <Button>
-        Login
-
-      </Button>
+      <Button>Login</Button>
     </Link>
   )
-
 }
