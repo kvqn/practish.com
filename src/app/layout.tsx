@@ -4,6 +4,9 @@ import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
 import { type Metadata } from "next"
 import { Navbar } from "./_components/navbar"
+import { ThemeProvider } from "next-themes"
+import { Toaster } from "@/components/ui/sonner"
+import { SessionProvider } from "./_components/session-provider"
 
 export const metadata: Metadata = {
   title: "practish - Practice your shell",
@@ -15,10 +18,19 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
+    <html
+      lang="en"
+      className={`${GeistSans.variable} ${GeistMono.variable}`}
+      suppressHydrationWarning
+    >
       <body className="flex h-screen flex-col font-geist">
-        <Navbar />
-        <div className="flex-grow p-4">{children}</div>
+        <ThemeProvider attribute="class">
+          <SessionProvider>
+            <Toaster />
+            <Navbar />
+            <div className="flex-grow p-4">{children}</div>
+          </SessionProvider>
+        </ThemeProvider>
       </body>
     </html>
   )

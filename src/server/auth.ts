@@ -86,3 +86,4 @@ export async function getServerUser() {
   const session = await getServerAuthSession()
   return session?.user
 }
+
