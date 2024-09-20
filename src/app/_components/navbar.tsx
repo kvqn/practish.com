@@ -7,14 +7,13 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { HamburgerMenuIcon } from "@radix-ui/react-icons"
-import Image from "next/image"
 
 function Logo() {
   return (
-    <div className="text-2xl">
+    <Link className="text-2xl" href="/">
       <span className="font-bold">practi</span>
       <span className="font-bold text-green-500">sh</span>
-    </div>
+    </Link>
   )
 }
 
