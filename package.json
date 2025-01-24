@@ -10,7 +10,7 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "dev": "next dev",
-    "lint": "next lint",
+    "lint": "next lint && bun check-problems.ts",
     "start": "next start"
   },
   "dependencies": {
