@@ -1,19 +1,43 @@
+"use client"
+
+import { usePathname } from "next/navigation"
+import { ProblemProvider } from "./_components/problem-context"
+
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable"
 
-import type { ReactNode } from "react"
-import { Prompt } from "./_components/prompt"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Testcases } from "./_components/testcases"
 
-export default function Layout({ children }: { children: ReactNode }) {
+export default function Layout({ children }: { children: React.ReactNode }) {
+  const path = usePathname()
+  const slug = RegExp(/\/problems\/([^\/]+)/).exec(path)?.[1]
+  if (!slug) throw new Error("You shouldn't get this error")
+
   return (
     <ResizablePanelGroup direction="horizontal">
       <ResizablePanel>{children}</ResizablePanel>
       <ResizableHandle />
-      <ResizablePanel className="p-4">
-        <Prompt />
+      <ResizablePanel className="flex w-full flex-col p-2">
+        <ProblemProvider slug={slug}>
+          <Tabs defaultValue="testcases" className="">
+            <TabsList className="w-full">
+              <TabsTrigger value="testcases" className="text-md flex-grow">
+                Testcases
+              </TabsTrigger>
+              <TabsTrigger value="submissions" className="text-md flex-grow">
+                Submissions
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="testcases">
+              <Testcases />
+            </TabsContent>
+            <TabsContent value="submissions"></TabsContent>
+          </Tabs>
+        </ProblemProvider>
       </ResizablePanel>
     </ResizablePanelGroup>
   )

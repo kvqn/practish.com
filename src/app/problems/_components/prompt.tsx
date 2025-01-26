@@ -3,16 +3,12 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { runInput } from "@/server/actions/run-input"
-import { usePathname } from "next/navigation"
 import { useState } from "react"
 import { toast } from "sonner"
+import { useProblem } from "../layout"
 
 export function Prompt() {
-  const pathname = usePathname()
-  const parts = pathname.split("/")
-  if (parts.length === 0) throw new Error("unexpected pathname")
-  const slug = parts[parts.length - 1]
-  if (!slug) throw new Error("unexpected pathname")
+  const { slug } = useProblem()
 
   const [input, setInput] = useState("")
   const [running, setRunning] = useState(false)
