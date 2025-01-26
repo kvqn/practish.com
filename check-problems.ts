@@ -1,11 +1,13 @@
-import { readdir } from "fs/promises"
-import { problemConfig } from "@/server/utils/problem-config"
+import { getProblemInfo, getProblems } from "@/server/utils/problem"
 
-const BASE_DIR = "./src/app/problems/(problems)"
-const problems = await readdir(BASE_DIR)
+export async function checkProblems() {
+  const problems = await getProblems()
 
-for (const problem of problems) {
-  await problemConfig(problem)
+  for (const problem of problems) {
+    await getProblemInfo(problem)
+  }
+
+  console.log("Problems seem good.")
 }
 
-console.log("Problems seem good.")
+await checkProblems()
