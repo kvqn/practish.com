@@ -1,6 +1,7 @@
 import { relations, sql } from "drizzle-orm"
 import {
   bigint,
+  foreignKey,
   index,
   int,
   mysqlTableCreator,
@@ -17,7 +18,7 @@ import { type AdapterAccount } from "next-auth/adapters"
  *
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
-export const createTable = mysqlTableCreator((name) => `practish.com_${name}`)
+export const createTable = mysqlTableCreator((name) => `practish_${name}`)
 
 export const posts = createTable(
   "post",
@@ -55,6 +56,7 @@ export const users = createTable("user", {
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
   sessions: many(sessions),
+  terminalSessions: many(terminalSessions),
 }))
 
 export const accounts = createTable(
@@ -119,5 +121,70 @@ export const verificationTokens = createTable(
   },
   (vt) => ({
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
+  }),
+)
+
+export const terminalSessions = createTable(
+  "terminal_session",
+  {
+    id: varchar("id", { length: 36 })
+      .notNull()
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    userId: varchar("user_id", { length: 255 })
+      .notNull()
+      .references(() => users.id),
+    problemId: int("problem_id", { unsigned: true }).notNull(),
+    testcaseId: int("testcase_id", { unsigned: true }).notNull(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    expiresAt: timestamp("expires_at", { mode: "date" }).notNull(),
+    deletedAt: timestamp("deleted_at", { mode: "date" }),
+  },
+  (ts) => ({
+    userIdIdx: index("terminal_session_user_id_idx").on(ts.userId),
+  }),
+)
+
+export const terminalSessionsRelations = relations(
+  terminalSessions,
+  ({ one, many }) => ({
+    user: one(users, {
+      fields: [terminalSessions.userId],
+      references: [users.id],
+    }),
+    logs: many(terminalSessionLogs),
+  }),
+)
+
+export const terminalSessionLogs = createTable(
+  "terminal_session_log",
+  {
+    id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+    sessionId: varchar("session_id", { length: 36 }).notNull(),
+    stdin: text("stdin").notNull(),
+    stdout: text("stdout").notNull(),
+    stderr: text("stderr").notNull(),
+    startedAt: timestamp("started_at"),
+    finishedAt: timestamp("finished_at"),
+  },
+  (tsl) => ({
+    sessionIdIdx: index("terminal_session_log_session_id_idx").on(
+      tsl.sessionId,
+    ),
+    sessionIdFk: foreignKey({
+      name: "terminal_session_log_session_id_fk",
+      columns: [tsl.sessionId],
+      foreignColumns: [terminalSessions.id],
+    }),
+  }),
+)
+
+export const terminalSessionLogsRelations = relations(
+  terminalSessionLogs,
+  ({ one }) => ({
+    session: one(terminalSessions, {
+      fields: [terminalSessionLogs.sessionId],
+      references: [terminalSessions.id],
+    }),
   }),
 )

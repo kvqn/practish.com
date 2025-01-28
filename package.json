@@ -1,10 +1,10 @@
 {
-  "name": "practish.com",
+  "name": "practish",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "next build && bun build-problems.ts",
+    "build": "next build && bun build-problems.ts && go build -o .practish/bin/container-io tools/container-io.go",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",

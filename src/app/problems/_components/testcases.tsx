@@ -9,18 +9,21 @@ import { TestcaseFilebrowser } from "./testcase-filebrowser"
 
 export function Testcases() {
   const { testcases } = useProblem()
-  const testcasesArray = Array.from({ length: testcases }, (_, i) => i + 1)
   const [tab, setTab] = useState("1")
 
-  const [mode, setMode] = useState<"filebrowser" | "terminal">("terminal")
+  const [mode] = useState<"filebrowser" | "terminal">("terminal")
 
   return (
     <div>
       <Tabs defaultValue="1" value={tab} onValueChange={setTab}>
         <TabsList className="w-full">
-          {testcasesArray.map((i) => (
-            <TabsTrigger key={i} value={i.toString()} className="flex-grow">
-              Test Case {i}
+          {testcases.map((testcase) => (
+            <TabsTrigger
+              key={testcase.id}
+              value={testcase.id.toString()}
+              className="flex-grow"
+            >
+              Test Case {testcase.id}
             </TabsTrigger>
           ))}
         </TabsList>
@@ -29,7 +32,11 @@ export function Testcases() {
         <div className="text-center font-semibold">
           {mode === "terminal" ? "Testcase Terminal" : "Testcase Filebrowser"}
         </div>
-        {mode === "terminal" ? <TestcaseTerminal /> : <TestcaseFilebrowser />}
+        {mode === "terminal" ? (
+          <TestcaseTerminal testcase={parseInt(tab)} />
+        ) : (
+          <TestcaseFilebrowser />
+        )}
       </div>
     </div>
   )

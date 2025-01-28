@@ -15,6 +15,7 @@ import {
   users,
   verificationTokens,
 } from "@/server/db/schema"
+import { redirect } from "next/navigation"
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -87,3 +88,8 @@ export async function getServerUser() {
   return session?.user
 }
 
+export async function ensureAuth() {
+  const user = await getServerUser()
+  if (!user) redirect("/login")
+  return user
+}

@@ -3,7 +3,13 @@ import { writeFile } from "fs/promises"
 import { mkdir } from "fs/promises"
 import { readdir } from "fs/promises"
 import z from "zod"
-import { dockerBuild } from "./docker"
+import { dockerBuild, dockerRun, isContainerRunning } from "./docker"
+import { randomUUID } from "crypto"
+import {
+  getActiveTerminalSession,
+  getTerminalSessionLogs,
+  insertTerminalSession,
+} from "../db/queries"
 
 const ProblemOutputSchema = z.object({
   stdout: z.string().optional(),
@@ -12,6 +18,7 @@ const ProblemOutputSchema = z.object({
 
 const ProblemConfigSchema = z
   .object({
+    id: z.number(),
     slug: z.string().refine((val) => RegExp(/^[a-z0-9\-]*[a-z0-9]$/).test(val)),
     title: z
       .string()
@@ -30,6 +37,13 @@ const ProblemConfigSchema = z
     capture_stdout: z.boolean().default(false),
     capture_fs_wildcard: z.string().optional(),
     successLogic: z.function().args(ProblemOutputSchema).returns(z.boolean()),
+    testcases: z.array(
+      z.object({
+        id: z.number().positive(),
+        folder: z.string(),
+        public: z.boolean().default(false),
+      }),
+    ),
   })
   .strict()
 
@@ -63,17 +77,13 @@ async function _problemConfig(problem: string) {
 
 const ProblemInfoSchema = z.object({
   ...ProblemConfigSchema.shape,
-  testcases: z.number(),
 })
 
 export async function getProblemInfo(
   problem: string,
 ): Promise<z.infer<typeof ProblemInfoSchema>> {
   const config = await _problemConfig(problem)
-  const testcases = (
-    await readdir(`./src/app/problems/(problems)/${problem}/_/testcases`)
-  ).length
-  return ProblemInfoSchema.parse({ ...config, testcases })
+  return ProblemInfoSchema.parse({ ...config })
 }
 
 export async function getProblems() {
@@ -88,35 +98,109 @@ export async function getTestcases(problem: string) {
   return testcases
 }
 
-export async function buildProblem(problem: string) {
-  const info = await getProblemInfo(problem)
-  for (let i = 1; i <= info.testcases; i++) {
-    const tag = `practish-${problem}-${i}`
-    await mkdir(`.practish/images/${tag}`, {
-      recursive: true,
-    })
+export async function submitProblem({
+  problemId,
+  testcaseId,
+  input,
+  sessionId,
+}: {
+  problemId: string
+  testcaseId: string
+  input: string
+  sessionId: string
+}) {
+  const input_file = `./.practish/inputs/${sessionId}`
+  await writeFile(input_file, input)
+  await dockerRun({
+    image: `practish-${problemId}-${testcaseId}`,
+    input: input_file,
+    name: `practish-${problemId}-${testcaseId}-${sessionId}`,
+  })
+}
 
-    await cp(
-      `./src/app/problems/(problems)/${problem}/_/testcases/${i}`,
-      `.practish/images/${tag}/home`,
-      {
-        recursive: true,
-      },
-    )
+export async function runTerminalSession({
+  problemId,
+  testcaseId,
+  sessionId,
+}: {
+  problemId: string
+  testcaseId: string
+  sessionId: string
+}) {
+  const problemSlug = await getProblemSlugFromId(parseInt(problemId))
+  if (!problemSlug) throw new Error("Problem not found")
 
-    await writeFile(
-      `.practish/images/${tag}/Dockerfile`,
-      `
-FROM alpine
-COPY home home
+  await dockerRun({
+    image: `practish-${problemSlug}-${testcaseId}`,
+    entrypoint: "/container-io",
+    name: `practish-${problemSlug}-${testcaseId}-${sessionId}`,
+  })
+}
 
-ENTRYPOINT ["/input.sh"]
-`,
-    )
-
-    await dockerBuild({
-      tag: tag,
-      dockerfile: `.practish/images/${tag}/Dockerfile`,
-    })
+export async function getTerminalSession({
+  userId,
+  problemId,
+  testcaseId,
+}: {
+  userId: string
+  problemId: number
+  testcaseId: number
+}) {
+  let session = await getActiveTerminalSession({
+    userId,
+    problemId,
+    testcaseId,
+  })
+  if (!session) {
+    await createTerminalSession({ userId, problemId, testcaseId })
+    session = await getActiveTerminalSession({ userId, problemId, testcaseId })
   }
+
+  if (!session) throw new Error("Failed to create terminal session")
+
+  const logs = await getTerminalSessionLogs(session.id)
+
+  return {
+    id: session.id,
+    createdAt: session.createdAt,
+    expiresAt: session.expiresAt,
+    deletedAt: session.deletedAt,
+    logs: logs,
+  }
+}
+
+export async function createTerminalSession({
+  userId,
+  problemId,
+  testcaseId,
+}: {
+  userId: string
+  problemId: number
+  testcaseId: number
+}) {
+  const sessionId = randomUUID()
+
+  await insertTerminalSession({
+    sessionId: sessionId,
+    userId: userId,
+    problemId: problemId,
+    testcaseId: testcaseId,
+  })
+
+  await runTerminalSession({
+    problemId: problemId.toString(),
+    testcaseId: testcaseId.toString(),
+    sessionId: sessionId,
+  })
+}
+
+export async function getProblemSlugFromId(problemId: number) {
+  const problems = await getProblems()
+  for (const problem of problems) {
+    const info = await getProblemInfo(problem)
+    if (info.id === problemId) {
+      return info.slug
+    }
+  }
+  return null
 }

@@ -1,6 +1,6 @@
 "use client"
 
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { ProblemProvider } from "./_components/problem-context"
 
 import {
@@ -15,7 +15,11 @@ import { Testcases } from "./_components/testcases"
 export default function Layout({ children }: { children: React.ReactNode }) {
   const path = usePathname()
   const slug = RegExp(/\/problems\/([^\/]+)/).exec(path)?.[1]
-  if (!slug) throw new Error("You shouldn't get this error")
+  const router = useRouter()
+  if (!slug) {
+    router.push("/browse")
+    return <div>Redirecting...</div>
+  }
 
   return (
     <ResizablePanelGroup direction="horizontal">

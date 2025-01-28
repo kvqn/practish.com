@@ -5,9 +5,14 @@ import { getProblemInfo as _getProblemInfo } from "../utils/problem"
 export async function getProblemInfo(slug: string) {
   const info = await _getProblemInfo(slug)
   return {
+    id: info.id,
     slug: info.slug,
     title: info.title,
     tags: info.tags,
-    testcases: info.testcases,
+    testcases: info.testcases
+      .filter((testcase) => testcase.public)
+      .map((testcase) => ({
+        id: testcase.id,
+      })),
   }
 }

@@ -3,12 +3,9 @@
 import { getProblemInfo } from "@/server/actions/get-problem-info"
 import { createContext, useContext, useEffect, useState } from "react"
 
-export const ProblemContext = createContext<{
-  slug: string
-  title: string
-  tags: string[]
-  testcases: number
-} | null>(null)
+export const ProblemContext = createContext<Awaited<
+  ReturnType<typeof getProblemInfo>
+> | null>(null)
 
 export function useProblem() {
   const problem = useContext(ProblemContext)
@@ -23,12 +20,9 @@ export function ProblemProvider({
   children: React.ReactNode
   slug: string
 }) {
-  const [problem, setProblem] = useState<{
-    slug: string
-    title: string
-    tags: string[]
-    testcases: number
-  } | null>(null)
+  const [problem, setProblem] = useState<Awaited<
+    ReturnType<typeof getProblemInfo>
+  > | null>(null)
 
   useEffect(() => {
     void (async () => {

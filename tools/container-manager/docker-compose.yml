@@ -1,0 +1,15 @@
+services:
+  practish-container-manager:
+    container_name: practish-container-manager
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    networks:
+      - practish-network
+    restart: always
+networks:
+  practish-network:
+    name: practish-network
+    external: true
