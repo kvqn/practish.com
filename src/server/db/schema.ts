@@ -1,6 +1,7 @@
 import { relations, sql } from "drizzle-orm"
 import {
   bigint,
+  boolean,
   foreignKey,
   index,
   int,
@@ -164,8 +165,8 @@ export const terminalSessionLogs = createTable(
     stdin: text("stdin").notNull(),
     stdout: text("stdout").notNull(),
     stderr: text("stderr").notNull(),
-    startedAt: timestamp("started_at"),
-    finishedAt: timestamp("finished_at"),
+    startedAt: timestamp("started_at").notNull(),
+    finishedAt: timestamp("finished_at").notNull(),
   },
   (tsl) => ({
     sessionIdIdx: index("terminal_session_log_session_id_idx").on(
@@ -185,6 +186,37 @@ export const terminalSessionLogsRelations = relations(
     session: one(terminalSessions, {
       fields: [terminalSessionLogs.sessionId],
       references: [terminalSessions.id],
+    }),
+  }),
+)
+
+export const submissions = createTable("submissions", {
+  id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+  userId: varchar("user_id", { length: 255 })
+    .notNull()
+    .references(() => users.id),
+  problemId: int("problem_id", { unsigned: true }).notNull(),
+})
+
+export const submission_testcases = createTable(
+  "submission_testcase",
+  {
+    submissionId: bigint("submission_id", { mode: "number" })
+      .notNull()
+      .references(() => submissions.id),
+    testcaseId: int("testcase_id", { unsigned: true }).notNull(),
+    input: text("stdin").notNull(),
+    stdout: text("stdout").notNull(),
+    stderr: text("stderr").notNull(),
+    exitCode: int("exit_code").notNull(),
+    createdAt: timestamp("created_at").notNull(),
+    finishedAt: timestamp("finished_at").notNull(),
+    fsZipBase64: text("fs_zip_base64"),
+    passed: boolean("success").notNull(),
+  },
+  (submission) => ({
+    compoundKey: primaryKey({
+      columns: [submission.submissionId, submission.testcaseId],
     }),
   }),
 )

@@ -6,6 +6,9 @@ const config: ProblemConfig = {
   title: "Hello World",
   tags: ["hello", "world"],
   capture_stdout: true,
+  capture_stderr: false,
+  capture_exit_code: false,
+  capture_fs: false,
   successLogic: ({ stdout }) => stdout === "Hello, World!\n",
   testcases: [
     { id: 1, folder: "1", public: true },

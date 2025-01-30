@@ -13,6 +13,8 @@ import {
 
 const ProblemOutputSchema = z.object({
   stdout: z.string().optional(),
+  stderr: z.string().optional(),
+  exit_code: z.number().optional(),
   fs: z.record(z.union([z.string(), z.null()])).optional(),
 })
 
@@ -35,7 +37,9 @@ const ProblemConfigSchema = z
       )
       .default([]),
     capture_stdout: z.boolean().default(false),
-    capture_fs_wildcard: z.string().optional(),
+    capture_stderr: z.boolean().default(false),
+    capture_exit_code: z.boolean().default(false),
+    capture_fs: z.boolean().default(false),
     successLogic: z.function().args(ProblemOutputSchema).returns(z.boolean()),
     testcases: z.array(
       z.object({

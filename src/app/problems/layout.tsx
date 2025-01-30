@@ -11,6 +11,7 @@ import {
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Testcases } from "./_components/testcases"
+import { Submissions } from "./_components/submissions"
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const path = usePathname()
@@ -39,7 +40,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <TabsContent value="testcases">
               <Testcases />
             </TabsContent>
-            <TabsContent value="submissions"></TabsContent>
+            <TabsContent value="submissions">
+              <Submissions />
+            </TabsContent>
           </Tabs>
         </ProblemProvider>
       </ResizablePanel>
