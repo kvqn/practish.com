@@ -205,7 +205,7 @@ export const submission_testcases = createTable(
     stdout: text("stdout").notNull(),
     stderr: text("stderr").notNull(),
     exitCode: integer("exit_code").notNull(),
-    createdAt: timestamp("created_at").notNull(),
+    startedAt: timestamp("started_at").notNull(),
     finishedAt: timestamp("finished_at").notNull(),
     fsZipBase64: text("fs_zip_base64"),
     passed: boolean("success").notNull(),
