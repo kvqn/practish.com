@@ -103,7 +103,7 @@ export async function insertTerminalSessionLog({
       startedAt: startedAt,
       finishedAt: finishedAt,
     })
-    .$returningId()
+    .returning({ id: terminalSessionLogs.id })
   if (!log[0]) {
     throw new Error("Failed to insert terminal session log")
   }
