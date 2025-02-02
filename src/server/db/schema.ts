@@ -4,6 +4,7 @@ import {
   foreignKey,
   index,
   integer,
+  pgEnum,
   pgTableCreator,
   primaryKey,
   text,
@@ -217,6 +218,28 @@ export const submission_testcases = createTable(
     }),
     primaryKey({
       columns: [submission.submissionId, submission.testcaseId],
+    }),
+  ],
+)
+export const queueItemStatus = pgEnum("queue_item_status", [
+  "pending",
+  "running",
+  "finished",
+])
+
+export const submissionTestcaseQueue = createTable(
+  "submission_testcase_queue",
+  {
+    submissionId: integer("submission_id").notNull(),
+    testcaseId: integer("testcase_id").notNull(),
+    input: text("input").notNull(),
+    status: queueItemStatus("status").notNull(),
+  },
+  (item) => [
+    foreignKey({
+      name: "submission_testcase_queue_fk",
+      columns: [item.submissionId],
+      foreignColumns: [submissions.id],
     }),
   ],
 )

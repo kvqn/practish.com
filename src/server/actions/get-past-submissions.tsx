@@ -3,29 +3,92 @@
 import { and, desc, eq, sql } from "drizzle-orm"
 import { db } from "../db"
 import { ensureAuth } from "../auth"
-import { submission_testcases, submissions } from "../db/schema"
+import {
+  submission_testcases,
+  submissions,
+  submissionTestcaseQueue,
+} from "../db/schema"
 
 export async function getPastSubmissions({ problemId }: { problemId: number }) {
   const { id: userId } = await ensureAuth()
 
-  const past_submissions = await db
-    .select({
-      id: submissions.id,
-      userId: submissions.userId,
-      problemId: submissions.problemId,
-      passed_testcases: sql<number>`cast(sum(${submission_testcases.passed}) as int)`,
-      attempted_testcases: sql<number>`cast(count(${submission_testcases.id}) as int)`,
-    })
-    .from(submissions)
-    .innerJoin(
-      submission_testcases,
-      eq(submissions.id, submission_testcases.id),
-    )
-    .where(
-      and(eq(submissions.problemId, problemId), eq(submissions.userId, userId)),
-    )
-    .groupBy(submissions.id)
-    .orderBy(desc(submissions.id))
+  // TODO: optimize these queries
+
+  const past_submissions = await Promise.all(
+    (
+      await db
+        .select({
+          id: submissions.id,
+        })
+        .from(submissions)
+        .where(
+          and(
+            eq(submissions.problemId, problemId),
+            eq(submissions.userId, userId),
+          ),
+        )
+    ).map(async (submission) => {
+      const testcases = await db
+        .select({
+          id: submissionTestcaseQueue.testcaseId,
+          status: submissionTestcaseQueue.status,
+          passed: submission_testcases.passed,
+        })
+        .from(submissionTestcaseQueue)
+        .leftJoin(
+          submission_testcases,
+          and(
+            eq(
+              submissionTestcaseQueue.submissionId,
+              submission_testcases.submissionId,
+            ),
+            eq(
+              submissionTestcaseQueue.testcaseId,
+              submission_testcases.testcaseId,
+            ),
+          ),
+        )
+        .where(eq(submissionTestcaseQueue.submissionId, submission.id))
+
+      let running = false
+      for (const testcase of testcases) {
+        if (testcase.passed === null) {
+          running = true
+          break
+        }
+      }
+
+      let passed
+
+      if (!running) {
+        passed = true
+        for (const testcase of testcases) {
+          if (!testcase.passed) {
+            passed = false
+            break
+          }
+        }
+      }
+
+      const resp = {
+        id: submission.id,
+        status: running
+          ? ("running" as const)
+          : passed
+            ? ("passed" as const)
+            : ("failed" as const),
+      }
+
+      return resp
+    }),
+  )
+
+  /*
+{
+  id: number,
+  status: "passed" | "failed" | "pending",
+  }
+  */
 
   return past_submissions
 }

@@ -4,19 +4,23 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { newSubmission } from "@/server/actions/new-submission"
 import { useState } from "react"
-import { useProblem } from "./problem-context"
+import { useProblem } from "../problem-context"
+import { useSubmissionsContext } from "./submissions-context"
 
 export function SubmitPrompt() {
   const [input, setInput] = useState("")
-  const [disabled, setDisabled] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
   const { id: problemId } = useProblem()
+  const { setSelectedSubmissionId } = useSubmissionsContext()
 
   async function handleSubmit() {
-    setDisabled(true)
+    setSubmitting(true)
     const resp = await newSubmission({
       problemId,
       input,
     })
+    setSelectedSubmissionId(resp.submissionId)
+    setSubmitting(false)
   }
 
   return (
@@ -24,9 +28,11 @@ export function SubmitPrompt() {
       <Input
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        disabled={disabled}
+        disabled={submitting}
       />
-      <Button disabled={disabled}>Submit</Button>
+      <Button disabled={submitting} onClick={handleSubmit}>
+        Submit
+      </Button>
     </div>
   )
 }

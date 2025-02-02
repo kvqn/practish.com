@@ -12,6 +12,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Testcases } from "./_components/testcases"
 import { Submissions } from "./_components/submissions"
+import { SubmissionsContextProvider } from "./_components/submissions/submissions-context"
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const path = usePathname()
@@ -41,7 +42,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <Testcases />
             </TabsContent>
             <TabsContent value="submissions">
-              <Submissions />
+              <SubmissionsContextProvider>
+                <Submissions />
+              </SubmissionsContextProvider>
             </TabsContent>
           </Tabs>
         </ProblemProvider>
