@@ -1,16 +1,15 @@
 import { relations, sql } from "drizzle-orm"
 import {
-  bigint,
   boolean,
   foreignKey,
   index,
-  int,
-  mysqlTableCreator,
+  integer,
+  pgTableCreator,
   primaryKey,
   text,
   timestamp,
   varchar,
-} from "drizzle-orm/mysql-core"
+} from "drizzle-orm/pg-core"
 import { type AdapterAccount } from "next-auth/adapters"
 
 /**
@@ -19,25 +18,27 @@ import { type AdapterAccount } from "next-auth/adapters"
  *
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
-export const createTable = mysqlTableCreator((name) => `practish_${name}`)
+export const createTable = pgTableCreator((name) => `practish_${name}`)
 
 export const posts = createTable(
   "post",
   {
-    id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+    id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
     name: varchar("name", { length: 256 }),
     createdById: varchar("created_by", { length: 255 })
       .notNull()
       .references(() => users.id),
-    createdAt: timestamp("created_at")
+    createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: timestamp("updated_at").onUpdateNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
+      () => new Date(),
+    ),
   },
-  (example) => ({
-    createdByIdIdx: index("created_by_idx").on(example.createdById),
-    nameIndex: index("name_idx").on(example.name),
-  }),
+  (example) => [
+    index("created_by_idx").on(example.createdById),
+    index("name_idx").on(example.name),
+  ],
 )
 
 export const users = createTable("user", {
@@ -49,15 +50,13 @@ export const users = createTable("user", {
   email: varchar("email", { length: 255 }).notNull(),
   emailVerified: timestamp("email_verified", {
     mode: "date",
-    fsp: 3,
-  }).default(sql`CURRENT_TIMESTAMP(3)`),
+    withTimezone: true,
+  }).default(sql`CURRENT_TIMESTAMP`),
   image: varchar("image", { length: 255 }),
 })
 
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
-  sessions: many(sessions),
-  terminalSessions: many(terminalSessions),
 }))
 
 export const accounts = createTable(
@@ -75,18 +74,18 @@ export const accounts = createTable(
     }).notNull(),
     refresh_token: text("refresh_token"),
     access_token: text("access_token"),
-    expires_at: int("expires_at"),
+    expires_at: integer("expires_at"),
     token_type: varchar("token_type", { length: 255 }),
     scope: varchar("scope", { length: 255 }),
     id_token: text("id_token"),
     session_state: varchar("session_state", { length: 255 }),
   },
-  (account) => ({
-    compoundKey: primaryKey({
+  (account) => [
+    primaryKey({
       columns: [account.provider, account.providerAccountId],
     }),
-    userIdIdx: index("account_user_id_idx").on(account.userId),
-  }),
+    index("account_user_id_idx").on(account.userId),
+  ],
 )
 
 export const accountsRelations = relations(accounts, ({ one }) => ({
@@ -102,11 +101,12 @@ export const sessions = createTable(
     userId: varchar("user_id", { length: 255 })
       .notNull()
       .references(() => users.id),
-    expires: timestamp("expires", { mode: "date" }).notNull(),
+    expires: timestamp("expires", {
+      mode: "date",
+      withTimezone: true,
+    }).notNull(),
   },
-  (session) => ({
-    userIdIdx: index("session_user_id_idx").on(session.userId),
-  }),
+  (session) => [index("session_user_id_idx").on(session.userId)],
 )
 
 export const sessionsRelations = relations(sessions, ({ one }) => ({
@@ -118,11 +118,12 @@ export const verificationTokens = createTable(
   {
     identifier: varchar("identifier", { length: 255 }).notNull(),
     token: varchar("token", { length: 255 }).notNull(),
-    expires: timestamp("expires", { mode: "date" }).notNull(),
+    expires: timestamp("expires", {
+      mode: "date",
+      withTimezone: true,
+    }).notNull(),
   },
-  (vt) => ({
-    compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
-  }),
+  (vt) => [primaryKey({ columns: [vt.identifier, vt.token] })],
 )
 
 export const terminalSessions = createTable(
@@ -135,32 +136,30 @@ export const terminalSessions = createTable(
     userId: varchar("user_id", { length: 255 })
       .notNull()
       .references(() => users.id),
-    problemId: int("problem_id", { unsigned: true }).notNull(),
-    testcaseId: int("testcase_id", { unsigned: true }).notNull(),
-    createdAt: timestamp("created_at").notNull().defaultNow(),
+    problemId: integer("problem_id").notNull(),
+    testcaseId: integer("testcase_id").notNull(),
+    createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
     expiresAt: timestamp("expires_at", { mode: "date" }).notNull(),
     deletedAt: timestamp("deleted_at", { mode: "date" }),
   },
-  (ts) => ({
-    userIdIdx: index("terminal_session_user_id_idx").on(ts.userId),
-  }),
+  (ts) => [index("terminal_session_user_id_idx").on(ts.userId)],
 )
 
-export const terminalSessionsRelations = relations(
-  terminalSessions,
-  ({ one, many }) => ({
-    user: one(users, {
-      fields: [terminalSessions.userId],
-      references: [users.id],
-    }),
-    logs: many(terminalSessionLogs),
-  }),
-)
+//export const terminalSessionsRelations = relations(
+//  terminalSessions,
+//  ({ one, many }) => ({
+//    user: one(users, {
+//      fields: [terminalSessions.userId],
+//      references: [users.id],
+//    }),
+//    logs: many(terminalSessionLogs),
+//  }),
+//)
 
 export const terminalSessionLogs = createTable(
   "terminal_session_log",
   {
-    id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+    id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
     sessionId: varchar("session_id", { length: 36 }).notNull(),
     stdin: text("stdin").notNull(),
     stdout: text("stdout").notNull(),
@@ -168,55 +167,56 @@ export const terminalSessionLogs = createTable(
     startedAt: timestamp("started_at").notNull(),
     finishedAt: timestamp("finished_at").notNull(),
   },
-  (tsl) => ({
-    sessionIdIdx: index("terminal_session_log_session_id_idx").on(
-      tsl.sessionId,
-    ),
-    sessionIdFk: foreignKey({
+  (tsl) => [
+    index("terminal_session_log_session_id_idx").on(tsl.sessionId),
+    foreignKey({
       name: "terminal_session_log_session_id_fk",
       columns: [tsl.sessionId],
       foreignColumns: [terminalSessions.id],
     }),
-  }),
+  ],
 )
 
-export const terminalSessionLogsRelations = relations(
-  terminalSessionLogs,
-  ({ one }) => ({
-    session: one(terminalSessions, {
-      fields: [terminalSessionLogs.sessionId],
-      references: [terminalSessions.id],
-    }),
-  }),
-)
+//export const terminalSessionLogsRelations = relations(
+//  terminalSessionLogs,
+//  ({ one }) => ({
+//    session: one(terminalSessions, {
+//      fields: [terminalSessionLogs.sessionId],
+//      references: [terminalSessions.id],
+//    }),
+//  }),
+//)
 
 export const submissions = createTable("submissions", {
-  id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
+  id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
   userId: varchar("user_id", { length: 255 })
     .notNull()
     .references(() => users.id),
-  problemId: int("problem_id", { unsigned: true }).notNull(),
+  problemId: integer("problem_id").notNull(),
 })
 
 export const submission_testcases = createTable(
   "submission_testcase",
   {
-    submissionId: bigint("submission_id", { mode: "number" })
-      .notNull()
-      .references(() => submissions.id),
-    testcaseId: int("testcase_id", { unsigned: true }).notNull(),
+    submissionId: integer("submission_id").notNull(),
+    testcaseId: integer("testcase_id").notNull(),
     input: text("stdin").notNull(),
     stdout: text("stdout").notNull(),
     stderr: text("stderr").notNull(),
-    exitCode: int("exit_code").notNull(),
+    exitCode: integer("exit_code").notNull(),
     createdAt: timestamp("created_at").notNull(),
     finishedAt: timestamp("finished_at").notNull(),
     fsZipBase64: text("fs_zip_base64"),
     passed: boolean("success").notNull(),
   },
-  (submission) => ({
-    compoundKey: primaryKey({
+  (submission) => [
+    foreignKey({
+      name: "submission_testcase_submission_id_fk",
+      columns: [submission.submissionId],
+      foreignColumns: [submissions.id],
+    }),
+    primaryKey({
       columns: [submission.submissionId, submission.testcaseId],
     }),
-  }),
+  ],
 )

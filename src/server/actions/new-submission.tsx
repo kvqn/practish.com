@@ -26,7 +26,7 @@ export async function newSubmission({
         problemId: problemId,
         userId: user.id,
       })
-      .$returningId()
+      .returning({ id: submissions.id })
   )[0]?.id
 
   if (!submissionId) {
