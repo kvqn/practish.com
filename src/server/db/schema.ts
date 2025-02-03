@@ -194,6 +194,9 @@ export const submissions = createTable("submissions", {
     .notNull()
     .references(() => users.id),
   problemId: integer("problem_id").notNull(),
+  submittedAt: timestamp("submitted_at", { mode: "date" })
+    .notNull()
+    .defaultNow(),
 })
 
 export const submission_testcases = createTable(
@@ -205,8 +208,8 @@ export const submission_testcases = createTable(
     stdout: text("stdout").notNull(),
     stderr: text("stderr").notNull(),
     exitCode: integer("exit_code").notNull(),
-    startedAt: timestamp("started_at").notNull(),
-    finishedAt: timestamp("finished_at").notNull(),
+    startedAt: timestamp("started_at", { mode: "date" }).notNull(),
+    finishedAt: timestamp("finished_at", { mode: "date" }).notNull(),
     fsZipBase64: text("fs_zip_base64"),
     passed: boolean("success").notNull(),
   },

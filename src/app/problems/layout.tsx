@@ -29,7 +29,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <ResizableHandle />
       <ResizablePanel className="flex w-full flex-col p-2">
         <ProblemProvider slug={slug}>
-          <Tabs defaultValue="testcases" className="">
+          <Tabs defaultValue="submissions" className="">
             <TabsList className="w-full">
               <TabsTrigger value="testcases" className="text-md flex-grow">
                 Testcases

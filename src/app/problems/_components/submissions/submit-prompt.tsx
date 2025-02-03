@@ -24,7 +24,7 @@ export function SubmitPrompt() {
   }
 
   return (
-    <div className="flex">
+    <div className="flex gap-2">
       <Input
         value={input}
         onChange={(e) => setInput(e.target.value)}

@@ -19,6 +19,7 @@ export async function getPastSubmissions({ problemId }: { problemId: number }) {
       await db
         .select({
           id: submissions.id,
+          submittedAt: submissions.submittedAt,
         })
         .from(submissions)
         .where(
@@ -27,6 +28,7 @@ export async function getPastSubmissions({ problemId }: { problemId: number }) {
             eq(submissions.userId, userId),
           ),
         )
+        .orderBy(desc(submissions.submittedAt))
     ).map(async (submission) => {
       const testcases = await db
         .select({
@@ -71,7 +73,7 @@ export async function getPastSubmissions({ problemId }: { problemId: number }) {
       }
 
       const resp = {
-        id: submission.id,
+        ...submission,
         status: running
           ? ("running" as const)
           : passed
@@ -90,5 +92,6 @@ export async function getPastSubmissions({ problemId }: { problemId: number }) {
   }
   */
 
+  console.log("past_submissions", past_submissions)
   return past_submissions
 }

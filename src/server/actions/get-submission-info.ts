@@ -1,6 +1,6 @@
 "use server"
 
-import { eq } from "drizzle-orm"
+import { and, eq, lte } from "drizzle-orm"
 import { db } from "../db"
 import {
   submission_testcases,
@@ -23,6 +23,15 @@ export async function getSubmissionInfo({
 
   if (!submission) throw new Error("Submission not found")
 
+  const attempt_number = await db.$count(
+    submissions,
+    and(
+      eq(submissions.userId, submission.userId),
+      eq(submissions.problemId, submission.problemId),
+      lte(submissions.id, submission.id),
+    ),
+  )
+
   const testcases = await db
     .select({
       id: submissionTestcaseQueue.testcaseId,
@@ -32,12 +41,21 @@ export async function getSubmissionInfo({
     .from(submissionTestcaseQueue)
     .leftJoin(
       submission_testcases,
-      eq(submissionTestcaseQueue.testcaseId, submission_testcases.testcaseId),
+      and(
+        eq(submissionTestcaseQueue.testcaseId, submission_testcases.testcaseId),
+        eq(
+          submissionTestcaseQueue.submissionId,
+          submission_testcases.submissionId,
+        ),
+      ),
     )
     .where(eq(submissionTestcaseQueue.submissionId, submission.id))
 
   return {
-    submission,
+    submission: {
+      ...submission,
+      attempt: attempt_number,
+    },
     testcases,
   }
 }
