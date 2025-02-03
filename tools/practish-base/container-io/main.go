@@ -103,6 +103,7 @@ func run(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	cmd = exec.Command("sh")
+	cmd.Dir = "/home"
 
 	stdin, _ = cmd.StdinPipe()
 	stdout, _ = cmd.StdoutPipe()

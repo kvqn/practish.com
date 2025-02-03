@@ -59,6 +59,7 @@ export function TestcaseTerminal({ testcase }: { testcase: number }) {
         problemId: problemId,
         testcaseId: testcase,
       })
+      console.log("session", session)
       setSession(session)
     })()
   }, [problemId, testcase])
@@ -69,7 +70,7 @@ export function TestcaseTerminal({ testcase }: { testcase: number }) {
     <div className="flex flex-col gap-4">
       <div className="flex flex-col rounded-md border-4 border-gray-400 font-geist-mono">
         <div
-          className="flex h-80 flex-col overflow-scroll bg-black px-2 py-1"
+          className="flex h-80 flex-col overflow-scroll whitespace-pre-line bg-black px-2 py-1"
           ref={terminalRef}
         >
           {session.logs.map((log) => (
