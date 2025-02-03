@@ -5,7 +5,7 @@ import { getSubmissionInfo } from "@/server/actions/get-submission-info"
 import { useEffect, useState } from "react"
 import { useSubmissionsContext } from "./submissions-context"
 import { IoIosArrowBack } from "react-icons/io"
-import { cn } from "@/lib/utils"
+import { cn, sleep } from "@/lib/utils"
 
 export function Submission({ submissionId }: { submissionId: number }) {
   const [info, setInfo] = useState<Awaited<
@@ -16,8 +16,20 @@ export function Submission({ submissionId }: { submissionId: number }) {
 
   useEffect(() => {
     void (async () => {
-      const info = await getSubmissionInfo({ submissionId })
-      setInfo(info)
+      while (true) {
+        const info = await getSubmissionInfo({ submissionId })
+        setInfo(info)
+
+        let fetchAgain = false
+        for (const testcase of info.testcases) {
+          if (testcase.status === "pending" || testcase.status === "running") {
+            fetchAgain = true
+            break
+          }
+        }
+        if (!fetchAgain) break
+        await sleep(1000)
+      }
     })()
   }, [submissionId])
 
