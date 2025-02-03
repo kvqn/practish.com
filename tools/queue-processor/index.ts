@@ -94,6 +94,8 @@ async function processQueueItem(
     JSON.parse(await readFile(outputFilePath, { encoding: "utf-8" })),
   )
 
+  console.log("Output", output)
+
   const passed = problem.successLogic({
     stdout: output.stdout,
     stderr: output.stderr,

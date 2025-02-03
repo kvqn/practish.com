@@ -13,6 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Testcases } from "./_components/testcases"
 import { Submissions } from "./_components/submissions"
 import { SubmissionsContextProvider } from "./_components/submissions/submissions-context"
+import { ProblemContent } from "./_components/content"
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const path = usePathname()
@@ -24,11 +25,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <ResizablePanelGroup direction="horizontal">
-      <ResizablePanel>{children}</ResizablePanel>
-      <ResizableHandle />
-      <ResizablePanel className="flex w-full flex-col p-2">
-        <ProblemProvider slug={slug}>
+    <ProblemProvider slug={slug}>
+      <ResizablePanelGroup direction="horizontal">
+        <ResizablePanel className="p-4">
+          <ProblemContent>{children}</ProblemContent>
+        </ResizablePanel>
+        <ResizableHandle />
+        <ResizablePanel className="flex w-full flex-col p-4">
           <Tabs defaultValue="submissions" className="">
             <TabsList className="w-full">
               <TabsTrigger value="testcases" className="text-md flex-grow">
@@ -47,8 +50,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </SubmissionsContextProvider>
             </TabsContent>
           </Tabs>
-        </ProblemProvider>
-      </ResizablePanel>
-    </ResizablePanelGroup>
+        </ResizablePanel>
+      </ResizablePanelGroup>
+    </ProblemProvider>
   )
 }

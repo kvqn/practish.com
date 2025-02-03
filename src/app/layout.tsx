@@ -28,7 +28,7 @@ export default function RootLayout({
           <SessionProvider>
             <Toaster />
             <Navbar />
-            <div className="flex-grow p-4">{children}</div>
+            <div className="flex-grow">{children}</div>
           </SessionProvider>
         </ThemeProvider>
       </body>
