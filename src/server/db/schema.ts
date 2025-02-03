@@ -4,6 +4,7 @@ import {
   foreignKey,
   index,
   integer,
+  pgEnum,
   pgTableCreator,
   primaryKey,
   text,
@@ -193,6 +194,9 @@ export const submissions = createTable("submissions", {
     .notNull()
     .references(() => users.id),
   problemId: integer("problem_id").notNull(),
+  submittedAt: timestamp("submitted_at", { mode: "date" })
+    .notNull()
+    .defaultNow(),
 })
 
 export const submission_testcases = createTable(
@@ -204,8 +208,8 @@ export const submission_testcases = createTable(
     stdout: text("stdout").notNull(),
     stderr: text("stderr").notNull(),
     exitCode: integer("exit_code").notNull(),
-    createdAt: timestamp("created_at").notNull(),
-    finishedAt: timestamp("finished_at").notNull(),
+    startedAt: timestamp("started_at", { mode: "date" }).notNull(),
+    finishedAt: timestamp("finished_at", { mode: "date" }).notNull(),
     fsZipBase64: text("fs_zip_base64"),
     passed: boolean("success").notNull(),
   },
@@ -217,6 +221,28 @@ export const submission_testcases = createTable(
     }),
     primaryKey({
       columns: [submission.submissionId, submission.testcaseId],
+    }),
+  ],
+)
+export const queueItemStatus = pgEnum("queue_item_status", [
+  "pending",
+  "running",
+  "finished",
+])
+
+export const submissionTestcaseQueue = createTable(
+  "submission_testcase_queue",
+  {
+    submissionId: integer("submission_id").notNull(),
+    testcaseId: integer("testcase_id").notNull(),
+    input: text("input").notNull(),
+    status: queueItemStatus("status").notNull(),
+  },
+  (item) => [
+    foreignKey({
+      name: "submission_testcase_queue_fk",
+      columns: [item.submissionId],
+      foreignColumns: [submissions.id],
     }),
   ],
 )

@@ -2,8 +2,7 @@
 
 import { ensureAuth } from "../auth"
 import { db } from "../db"
-import { submission_testcases, submissions } from "../db/schema"
-import { dockerRunSubmission } from "../utils/docker"
+import { submissions, submissionTestcaseQueue } from "../db/schema"
 import { getProblemInfo, getProblemSlugFromId } from "../utils/problem"
 
 export async function newSubmission({
@@ -34,34 +33,13 @@ export async function newSubmission({
   }
 
   const problem = await getProblemInfo(problemSlug)
-
+  // TODO: parallelize this
   for (const testcase of problem.testcases) {
-    const createdAt = new Date()
-    const output = await dockerRunSubmission({
-      submissionId,
-      problemSlug,
+    await db.insert(submissionTestcaseQueue).values({
+      submissionId: submissionId,
       testcaseId: testcase.id,
-      input,
-    })
-    const finishedAt = new Date()
-
-    const passed = problem.successLogic({
-      stdout: output.stdout,
-      stderr: output.stderr,
-      exit_code: output.exit_code,
-    })
-
-    await db.insert(submission_testcases).values({
-      submissionId,
-      input,
-      testcaseId: testcase.id,
-      stdout: output.stdout,
-      stderr: output.stderr,
-      exitCode: output.exit_code,
-      fsZipBase64: output.fs_zip_base64,
-      createdAt,
-      finishedAt,
-      passed,
+      input: input,
+      status: "pending",
     })
   }
 

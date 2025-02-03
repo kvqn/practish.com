@@ -1,8 +1,8 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
-	"io"
 	"os"
 	"os/exec"
 )
@@ -25,31 +25,16 @@ func FsZipBase64() string {
 func main() {
 	cmd := exec.Command("sh", "/input.sh")
 
-	stdoutPipe, err := cmd.StdoutPipe()
-	if err != nil {
-		panic(err)
-	}
-
-	stderrPipe, err := cmd.StderrPipe()
-	if err != nil {
-		panic(err)
-	}
+	var stdoutBytes, stderrBytes bytes.Buffer
+	cmd.Stdout = &stdoutBytes
+	cmd.Stderr = &stderrBytes
 
 	cmd.Run()
 
 	exitCode := cmd.ProcessState.ExitCode()
 
-	stdoutBytes, err := io.ReadAll(stdoutPipe)
-	if err != nil {
-		panic(err)
-	}
-	stdout := string(stdoutBytes)
-
-	stderrBytes, err := io.ReadAll(stderrPipe)
-	if err != nil {
-		panic(err)
-	}
-	stderr := string(stderrBytes)
+	stdout := string(stdoutBytes.Bytes())
+	stderr := string(stderrBytes.Bytes())
 
 	fs := FsZipBase64()
 
@@ -60,11 +45,11 @@ func main() {
 		FsZipBase64: fs,
 	}
 
-	f, err := os.OpenFile("/output.json", os.O_CREATE|os.O_WRONLY, 0644)
+	f, err := os.Create("/output.json")
 	if err != nil {
 		panic(err)
 	}
+	defer f.Close()
 
 	json.NewEncoder(f).Encode(output)
-	f.Close()
 }

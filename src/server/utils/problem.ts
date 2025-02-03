@@ -102,26 +102,6 @@ export async function getTestcases(problem: string) {
   return testcases
 }
 
-export async function submitProblem({
-  problemId,
-  testcaseId,
-  input,
-  sessionId,
-}: {
-  problemId: string
-  testcaseId: string
-  input: string
-  sessionId: string
-}) {
-  const input_file = `./.practish/inputs/${sessionId}`
-  await writeFile(input_file, input)
-  await dockerRun({
-    image: `practish-${problemId}-${testcaseId}`,
-    input: input_file,
-    name: `practish-${problemId}-${testcaseId}-${sessionId}`,
-  })
-}
-
 export async function runTerminalSession({
   problemId,
   testcaseId,
@@ -206,5 +186,6 @@ export async function getProblemSlugFromId(problemId: number) {
       return info.slug
     }
   }
+  // TODO: throw if not null
   return null
 }

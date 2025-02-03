@@ -18,7 +18,8 @@ export async function dockerRun(
     await $`docker run --rm -d --name ${args.name} --entrypoint ${args.entrypoint} --net practish-network ${args.image}`
     return
   }
-  await $`docker run --rm -d --name ${args.name} -v ${args.input}:/input.sh --net practish-network ${args.image}`
+  throw new Error("not implemented")
+  //await $`docker run --rm -d --name ${args.name} -v ${args.input}:/input.sh --entrypoint /submission-runner --net practish-network ${args.image}`
 }
 
 export async function getContainerIp(container_name: string) {
