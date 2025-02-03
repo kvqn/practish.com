@@ -27,6 +27,7 @@ const ProblemConfigSchema = z
       .nonempty()
       .refine((val) => !val.startsWith(" "))
       .refine((val) => !val.endsWith(" ")),
+    description: z.string().nonempty(),
     tags: z
       .array(
         z

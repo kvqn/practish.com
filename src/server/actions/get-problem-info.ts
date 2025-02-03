@@ -8,6 +8,7 @@ export async function getProblemInfo(slug: string) {
     id: info.id,
     slug: info.slug,
     title: info.title,
+    description: info.description,
     tags: info.tags,
     testcases: info.testcases
       .filter((testcase) => testcase.public)
