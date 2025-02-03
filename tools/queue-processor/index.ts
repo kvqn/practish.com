@@ -5,6 +5,7 @@ import {
   submissionTestcaseQueue,
 } from "@/server/db/schema"
 import { getProblemInfo, getProblemSlugFromId } from "@/server/utils/problem"
+import { unzip } from "@/server/utils/unzip"
 import { and, eq, sql } from "drizzle-orm"
 import { $ } from "execa"
 import { mkdir } from "fs/promises"
@@ -96,10 +97,12 @@ async function processQueueItem(
 
   console.log("Output", output)
 
-  const passed = problem.successLogic({
+  const fs = await unzip(output.fs_zip_base64)
+  const passed = await problem.successLogic({
     stdout: output.stdout,
     stderr: output.stderr,
     exit_code: output.exit_code,
+    fs: fs,
   })
 
   await db.insert(submission_testcases).values({

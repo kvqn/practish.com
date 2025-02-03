@@ -1,0 +1,8 @@
+Todo List
+
+1. Fix that bug I’ve been ignoring for days. It’s been staring at me like a judgmental cat. 🐱
+2. Refactor the database connection code, because clean code = happy life. 💻
+3. Review the pull request. Don’t forget to comment with ‘looks good to me’ even if you don’t fully understand it. 🤔
+4. Write a README file. (It’s the least I can do for my future self.) 📜
+5. Push all the code... but not too many console logs this time. 🙄
+
