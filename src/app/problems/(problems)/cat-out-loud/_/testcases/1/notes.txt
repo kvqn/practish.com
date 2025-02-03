@@ -1,0 +1,6 @@
+Linux Tech Tips :P
+
+- Remember to use `git status` before `git commit`. No one likes surprises. ⚡
+- Use `grep` like a wizard: Search for anything, anywhere. 🔍
+- Don't forget to `chmod +x` your scripts. No one wants a script that's stuck in read-only mode. 🙄
+- Clear the terminal with `clear`, because a messy terminal is a messy mind. 🧹

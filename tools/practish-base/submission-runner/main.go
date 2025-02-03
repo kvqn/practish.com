@@ -15,7 +15,7 @@ type Output struct {
 }
 
 func FsZipBase64() string {
-	out, err := exec.Command("sh", "-c", "zip -r - /home | base64").Output()
+	out, err := exec.Command("sh", "-c", "cd /home && zip -r - . | base64").Output()
 	if err != nil {
 		panic(err)
 	}
