@@ -24,6 +24,7 @@ func FsZipBase64() string {
 
 func main() {
 	cmd := exec.Command("sh", "/input.sh")
+	cmd.Dir = "/home"
 
 	var stdoutBytes, stderrBytes bytes.Buffer
 	cmd.Stdout = &stdoutBytes

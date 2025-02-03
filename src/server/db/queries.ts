@@ -3,6 +3,7 @@ import { db } from "."
 import { terminalSessionLogs, terminalSessions } from "./schema"
 import { isContainerRunning } from "../utils/docker"
 import { getProblemSlugFromId } from "../utils/problem"
+import utf8 from "utf8"
 
 export async function getActiveTerminalSession({
   userId,
@@ -44,7 +45,7 @@ export async function getActiveTerminalSession({
 }
 
 export async function getTerminalSessionLogs(sessionId: string) {
-  return await db
+  let logs = await db
     .select({
       id: terminalSessionLogs.id,
       stdin: terminalSessionLogs.stdin,
@@ -56,6 +57,14 @@ export async function getTerminalSessionLogs(sessionId: string) {
     .from(terminalSessionLogs)
     .where(eq(terminalSessionLogs.sessionId, sessionId))
     .orderBy(asc(terminalSessionLogs.id))
+
+  logs = logs.map((log) => ({
+    ...log,
+    stdout: Buffer.from(log.stdout, "latin1").toString("utf-8"),
+    stderr: Buffer.from(log.stderr, "latin1").toString("utf-8"),
+  }))
+  console.log("logs", logs)
+  return logs
 }
 
 export async function insertTerminalSession({
