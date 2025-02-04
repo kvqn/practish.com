@@ -29,7 +29,7 @@ for (const problem of problems) {
     })
 
     await cp(
-      `./src/app/problems/(problems)/${problem}/_/testcases/${testcase.folder}`,
+      `./problems/${problem}/testcases/${testcase.folder}`,
       `.practish/images/${tag}/home`,
       {
         recursive: true,

@@ -64,7 +64,7 @@ export type ProblemOutput = z.infer<typeof ProblemOutputSchema>
 async function _problemConfig(problem: string) {
   const parse_result = ProblemConfigSchema.safeParse(
     (
-      (await import(`~/problems/${problem}/_/config`)) as {
+      (await import(`~/problems/${problem}/config`)) as {
         default: unknown
       }
     ).default,
@@ -101,7 +101,7 @@ export async function getProblems() {
 }
 
 export async function getTestcases(problem: string) {
-  const BASE_DIR = `./problems/${problem}/_/testcases`
+  const BASE_DIR = `./problems/${problem}/testcases`
   const testcases = await readdir(BASE_DIR)
   return testcases
 }
