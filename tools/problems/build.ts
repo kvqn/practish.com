@@ -1,10 +1,6 @@
 import { dockerBuild } from "@/server/utils/docker"
-import {
-  buildProblem,
-  getProblemInfo,
-  getProblems,
-} from "@/server/utils/problem"
-import { checkProblems } from "check-problems"
+import { getProblemInfo, getProblems } from "@/server/utils/problem"
+import { checkProblems } from "./lint"
 import { writeFile } from "fs/promises"
 import { cp } from "fs/promises"
 import { mkdir } from "fs/promises"
@@ -19,7 +15,7 @@ await rm(WORKING_DIR, { recursive: true, force: true })
 
 await dockerBuild({
   tag: "practish-base",
-  dir: "tools/practish-base",
+  dir: "tools/problems/practish-base",
 })
 
 const problems = await getProblems()
@@ -33,7 +29,7 @@ for (const problem of problems) {
     })
 
     await cp(
-      `./src/app/problems/(problems)/${problem}/_/testcases/${testcase.folder}`,
+      `./problems/${problem}/testcases/${testcase.folder}`,
       `.practish/images/${tag}/home`,
       {
         recursive: true,

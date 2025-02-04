@@ -2,7 +2,7 @@
 
 import { useProblem } from "./problem-context"
 
-export function ProblemContent({ children }: { children: React.ReactNode }) {
+export function ProblemHeading() {
   const { id, slug, title, description } = useProblem()
   return (
     <div>
@@ -14,8 +14,6 @@ export function ProblemContent({ children }: { children: React.ReactNode }) {
         </div>
       </div>
       <p className="px-4 text-center italic">{description}</p>
-
-      <div>{children}</div>
     </div>
   )
 }

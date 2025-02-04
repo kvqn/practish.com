@@ -1,6 +1,3 @@
-"use client"
-
-import { usePathname, useRouter } from "next/navigation"
 import { ProblemProvider } from "./_components/problem-context"
 
 import {
@@ -13,22 +10,20 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Testcases } from "./_components/testcases"
 import { Submissions } from "./_components/submissions"
 import { SubmissionsContextProvider } from "./_components/submissions/submissions-context"
-import { ProblemContent } from "./_components/content"
+import { ProblemHeading } from "./_components/heading"
+import { ProblemMarkdown } from "./_components/markdown"
 
-export default function Layout({ children }: { children: React.ReactNode }) {
-  const path = usePathname()
-  const slug = RegExp(/\/problems\/([^\/]+)/).exec(path)?.[1]
-  const router = useRouter()
-  if (!slug) {
-    router.push("/browse")
-    return <div>Redirecting...</div>
-  }
+export default function Page({ params }: { params: { problemSlug: string } }) {
+  const { problemSlug } = params
 
   return (
-    <ProblemProvider slug={slug}>
+    <ProblemProvider slug={problemSlug}>
       <ResizablePanelGroup direction="horizontal">
         <ResizablePanel className="p-4">
-          <ProblemContent>{children}</ProblemContent>
+          <div>
+            <ProblemHeading />
+            <ProblemMarkdown slug={problemSlug} />
+          </div>
         </ResizablePanel>
         <ResizableHandle />
         <ResizablePanel className="flex w-full flex-col p-4">

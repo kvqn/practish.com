@@ -4,14 +4,22 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "next build && bun build-problems.ts && go build -o .practish/bin/container-io tools/container-io.go",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
-    "dev": "next dev",
-    "lint": "next lint && bun check-problems.ts",
-    "start": "next start"
+    "next:build": "next build",
+    "next:dev": "next dev",
+    "next:lint": "next lint",
+    "next:start": "next start",
+    "problems:lint": "bun tools/problems/lint",
+    "problems:build": "bun tools/problems/build",
+    "queue-processor:dev": "bun --watch tools/queue-processor",
+    "queue-processor:start": "bun tools/queue-processor",
+    "container-manager:up": "docker compose up -f tools/container-manager/docker-compose.yml",
+    "container-manager:down": "docker compose down -f tools/container-manager/docker-compose.yml",
+    "prettier:check": "prettier --check .",
+    "prettier:write": "prettier --write ."
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.7.4",
