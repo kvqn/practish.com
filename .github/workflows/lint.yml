@@ -1,0 +1,42 @@
+
+on:
+  pull_request:
+  push:
+
+
+jobs:
+  next-lint:
+    runs-on: alpine-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun i
+      - run: bun next:lint
+
+  problems-lint:
+    runs-on: alpine-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun i
+      - run: bun problems:lint
+
+  prettier-check:
+    runs-on: alpine-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun i
+      - run: bun prettier:check
+
+  go:
+    runs-on: alpine-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.60
