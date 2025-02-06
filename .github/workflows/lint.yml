@@ -63,7 +63,7 @@ jobs:
         uses: golangci/golangci-lint-action@v6
         with:
           version: v1.60
-          working_directory: tools/problems/practish-base/container-io
+          working-directory: tools/problems/practish-base/container-io
 
   submission-runner-lint:
     runs-on: ubuntu-latest
@@ -76,4 +76,4 @@ jobs:
         uses: golangci/golangci-lint-action@v6
         with:
           version: v1.60
-          working_directory: tools/problems/practish-base/submission-runner
+          working-directory: tools/problems/practish-base/submission-runner
