@@ -2,9 +2,9 @@ FROM alpine:3.21 AS build
 
 RUN apk add go
 
-COPY container-manager.go container-manager.go
+COPY . .
 
-RUN go build -o container-manager container-manager.go
+RUN go build
 
 FROM alpine:3.21 AS base
 

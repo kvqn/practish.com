@@ -26,9 +26,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
-	if strings.HasSuffix(container_name, "/") {
-		container_name = container_name[:len(container_name)-1]
-	}
+
+	container_name = strings.TrimSuffix(container_name, "/")
 
 	//TODO: check valid container name
 
@@ -59,12 +58,21 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed", http.StatusInternalServerError)
 		return
 	}
-	w.Write(resp_body)
+	_, err = w.Write(resp_body)
+	if err != nil {
+		http.Error(w, "Failed", http.StatusInternalServerError)
+		return
+	}
 
 }
 
 func main() {
 	client = &http.Client{}
 	http.HandleFunc("/", handler)
-	http.ListenAndServe(":4000", nil)
+
+	fmt.Println("Listening on port 4000")
+	err := http.ListenAndServe(":4000", nil)
+	if err != nil {
+		panic("Failed to start server")
+	}
 }

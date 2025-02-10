@@ -1,6 +1,4 @@
 import { $ } from "execa"
-import { readFile } from "fs/promises"
-import { z } from "zod"
 
 export async function dockerBuild({ tag, dir }: { tag: string; dir: string }) {
   console.log(`building ${tag}`)
@@ -36,33 +34,4 @@ export async function isContainerRunning(container_name: string) {
   } catch {
     return false
   }
-}
-
-const RunSubmissionOutputSchema = z.object({
-  stdout: z.string(),
-  stderr: z.string(),
-  exit_code: z.number(),
-  fs_zip_base64: z.string(),
-})
-
-export async function dockerRunSubmission({
-  problemSlug,
-  testcaseId,
-  submissionId,
-  input,
-}: {
-  problemSlug: string
-  testcaseId: number
-  submissionId: number
-  input: string
-}) {
-  const image = `practish-${problemSlug}-${testcaseId}`
-  const container_name = `practish-${problemSlug}-${testcaseId}-${submissionId}`
-  const inputFile = `./.practish/inputs/${container_name}.sh`
-  const outputFile = `./.practish/outputs/${container_name}.json`
-  await $`docker run -it --rm -d --name ${container_name} -v ${inputFile}:/input.sh -v ${outputFile}:/output.json --entrypoint /submission-runner ${image}`
-
-  const output = RunSubmissionOutputSchema.parse(await readFile(outputFile))
-
-  return output
 }
