@@ -1,4 +1,4 @@
-import yauzl from "yauzl"
+import yauzl, { type Entry } from "yauzl"
 
 export async function unzip(
   fs_zip_base64: string,
@@ -13,8 +13,8 @@ export async function unzip(
       }
 
       zipfile.readEntry()
-      zipfile.on("entry", (entry) => {
-        if (/\/$/.test(entry.fileName)) {
+      zipfile.on("entry", (entry: Entry) => {
+        if (entry.fileName.endsWith("/")) {
           zipfile.readEntry()
         } else {
           zipfile.openReadStream(entry, (err, readStream) => {
