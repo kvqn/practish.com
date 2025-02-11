@@ -21,8 +21,8 @@
     "container-manager:down": "docker compose down -f tools/container-manager/docker-compose.yml",
     "container-io:lint": "golangci-lint run tools/problems/practish-base/container-io/main.go",
     "submission-runner:lint": "golangci-lint run tools/problems/practish-base/submission-runner/main.go",
-    "prettier:check": "prettier --check .",
-    "prettier:write": "prettier --write .",
+    "prettier:check": "bunx prettier --check .",
+    "prettier:write": "bunx prettier --write .",
     "lint": "bun problems:lint && bun next:lint && bun prettier:check && bun container-manager:lint && bun container-io:lint && bun submission-runner:lint"
   },
   "dependencies": {
