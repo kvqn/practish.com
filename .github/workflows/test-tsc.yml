@@ -4,14 +4,14 @@ on:
   push:
     branches:
       - main
-    paths: 
+    paths:
       - "**/*.js"
       - "**/*.ts"
       - "**/*.tsx"
       - "**/*.jsx"
       - "**/*.cjs"
   pull_request:
-    paths: 
+    paths:
       - "**/*.js"
       - "**/*.ts"
       - "**/*.tsx"
