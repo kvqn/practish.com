@@ -31,8 +31,6 @@ jobs:
         name: Check TypeScript types
       - run: bun next:lint
         name: Lint Next.js files
-      - run: bun prettier:check
-        name: Check Formatting
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}

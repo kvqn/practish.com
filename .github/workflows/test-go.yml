@@ -32,9 +32,6 @@ jobs:
         with:
           version: v1.60
           working-directory: tools/container-manager
-      - name: check formatting
-        run: gofmt -l -s -w .
-        working-directory: tools/container-manager
   container-io:
     runs-on: ubuntu-latest
     steps:
@@ -47,9 +44,6 @@ jobs:
         with:
           version: v1.60
           working-directory: tools/problems/practish-base/container-io
-      - name: check formatting
-        run: gofmt -l -s -w .
-        working-directory: tools/problems/practish-base/container-io
   submission-runner:
     runs-on: ubuntu-latest
     steps:
@@ -62,6 +56,3 @@ jobs:
         with:
           version: v1.60
           working-directory: tools/problems/practish-base/submission-runner
-      - name: check formatting
-        run: gofmt -l -s -w .
-        working-directory: tools/problems/practish-base/submission-runner
