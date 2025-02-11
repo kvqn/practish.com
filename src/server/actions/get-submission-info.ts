@@ -23,18 +23,20 @@ export async function getSubmissionInfo({
 
   if (!submission) throw new Error("Submission not found")
 
-  const attempt_number = await db
-    .select({
-      attempt: count(),
-    })
-    .from(submissions)
-    .where(
-      and(
-        eq(submissions.userId, submission.userId),
-        eq(submissions.problemId, submission.problemId),
-        lte(submissions.id, submission.id),
-      ),
-    )
+  const attempt_number = (
+    await db
+      .select({
+        attempt: count(),
+      })
+      .from(submissions)
+      .where(
+        and(
+          eq(submissions.userId, submission.userId),
+          eq(submissions.problemId, submission.problemId),
+          lte(submissions.id, submission.id),
+        ),
+      )
+  )[0]!.attempt
 
   const testcases = await db
     .select({
