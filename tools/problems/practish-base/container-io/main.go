@@ -35,6 +35,13 @@ func RandomDelimiter() string {
 	return string(b)
 }
 
+func WriteOrPanic(w io.Writer, data string) {
+	_, err := w.Write([]byte(data))
+	if err != nil {
+		panic(err)
+	}
+}
+
 func run(w http.ResponseWriter, r *http.Request) {
 	if locked {
 		http.Error(w, "Locked", http.StatusLocked)
@@ -56,9 +63,9 @@ func run(w http.ResponseWriter, r *http.Request) {
 	stdoutReader := bufio.NewReader(stdout)
 	stderrReader := bufio.NewReader(stderr)
 
-	stdin.Write([]byte(input + "\n"))
-	stdin.Write([]byte("echo " + delimiter + "\n"))
-	stdin.Write([]byte("echo >&2 " + delimiter + "\n"))
+	WriteOrPanic(stdin, input+"\n")
+	WriteOrPanic(stdin, "echo "+delimiter+"\n")
+	WriteOrPanic(stdin, "echo >&2 "+delimiter+"\n")
 
 	for {
 		_read_stdout, err := stdoutReader.ReadByte()
@@ -97,7 +104,10 @@ func run(w http.ResponseWriter, r *http.Request) {
 		Stderr: read_stderr,
 	}
 
-	json.NewEncoder(w).Encode(response)
+	err = json.NewEncoder(w).Encode(response)
+	if err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	}
 	locked = false
 }
 
@@ -114,10 +124,16 @@ func main() {
 	}
 
 	go func() {
-		cmd.Wait()
+		err := cmd.Wait()
+		if err != nil {
+			panic(err)
+		}
 		panic("Subprocess Ended")
 	}()
 
 	http.HandleFunc("/run", run)
-	http.ListenAndServe(":8080", nil)
+	err := http.ListenAndServe(":8080", nil)
+	if err != nil {
+		panic(err)
+	}
 }

@@ -1,0 +1,58 @@
+name: Test Go Files
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - tools/container-manager/go.mod
+      - tools/container-manager/main.go
+      - tools/problems/practish-base/container-io/go.mod
+      - tools/problems/practish-base/container-io/main.go
+      - tools/problems/practish-base/submission-runner/go.mod
+      - tools/problems/practish-base/submission-runner/main.go
+  pull_request:
+    paths:
+      - tools/container-manager/go.mod
+      - tools/container-manager/main.go
+      - tools/problems/practish-base/container-io/go.mod
+      - tools/problems/practish-base/container-io/main.go
+      - tools/problems/practish-base/submission-runner/go.mod
+      - tools/problems/practish-base/submission-runner/main.go
+
+jobs:
+  container-manager:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+      - name: check linting
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.60
+          working-directory: tools/container-manager
+  container-io:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+      - name: check linting
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.60
+          working-directory: tools/problems/practish-base/container-io
+  submission-runner:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+      - name: check linting
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.60
+          working-directory: tools/problems/practish-base/submission-runner

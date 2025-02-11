@@ -1,0 +1,41 @@
+name: Test TypeScript Files
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "**/*.js"
+      - "**/*.ts"
+      - "**/*.tsx"
+      - "**/*.jsx"
+      - "**/*.cjs"
+      - "**/*.json"
+  pull_request:
+    paths:
+      - "**/*.js"
+      - "**/*.ts"
+      - "**/*.tsx"
+      - "**/*.jsx"
+      - "**/*.cjs"
+      - "**/*.json"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    environment: linting
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun i
+        name: Install dependencies
+      - run: bunx tsc --noEmit
+        name: Check TypeScript types
+      - run: bun next:lint
+        name: Lint Next.js files
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}
+      DISCORD_CLIENT_SECRET: ${{ secrets.DISCORD_CLIENT_SECRET }}
+      NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+      NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}

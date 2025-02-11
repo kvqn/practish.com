@@ -17,9 +17,13 @@
     "queue-processor:dev": "bun --watch tools/queue-processor",
     "queue-processor:start": "bun tools/queue-processor",
     "container-manager:up": "docker compose up -f tools/container-manager/docker-compose.yml",
+    "container-manager:lint": "golangci-lint run tools/container-manager/main.go",
     "container-manager:down": "docker compose down -f tools/container-manager/docker-compose.yml",
-    "prettier:check": "prettier --check .",
-    "prettier:write": "prettier --write ."
+    "container-io:lint": "golangci-lint run tools/problems/practish-base/container-io/main.go",
+    "submission-runner:lint": "golangci-lint run tools/problems/practish-base/submission-runner/main.go",
+    "prettier:check": "bunx prettier --check .",
+    "prettier:write": "bunx prettier --write .",
+    "lint": "bun problems:lint && bun next:lint && bun prettier:check && bun container-manager:lint && bun container-io:lint && bun submission-runner:lint"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.7.4",
@@ -53,7 +57,6 @@
     "sonner": "^1.7.2",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
-    "utf8": "^3.0.0",
     "uuid": "^10.0.0",
     "yauzl": "^3.2.0",
     "zod": "^3.24.1"
@@ -62,6 +65,7 @@
     "@types/bun": "^1.2.0",
     "@types/eslint": "^8.56.12",
     "@types/mdx": "^2.0.13",
+    "@types/moment": "^2.13.0",
     "@types/node": "^20.17.16",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",

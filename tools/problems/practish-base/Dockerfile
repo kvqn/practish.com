@@ -5,8 +5,8 @@ RUN apk add go
 COPY container-io /src/container-io
 COPY submission-runner /src/submission-runner
 
-RUN go build -o /bin/container-io /src/container-io/main.go
-RUN go build -o /bin/submission-runner /src/submission-runner/main.go
+RUN go build -o /bin/container-io /src/container-io
+RUN go build -o /bin/submission-runner /src/submission-runner
 
 FROM alpine:3.21 AS base
 

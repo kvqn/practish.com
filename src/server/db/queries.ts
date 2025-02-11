@@ -3,7 +3,6 @@ import { db } from "."
 import { terminalSessionLogs, terminalSessions } from "./schema"
 import { isContainerRunning } from "../utils/docker"
 import { getProblemSlugFromId } from "../utils/problem"
-import utf8 from "utf8"
 
 export async function getActiveTerminalSession({
   userId,

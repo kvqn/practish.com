@@ -30,12 +30,15 @@ func main() {
 	cmd.Stdout = &stdoutBytes
 	cmd.Stderr = &stderrBytes
 
-	cmd.Run()
+	err := cmd.Run()
+	if err != nil {
+		panic(err)
+	}
 
 	exitCode := cmd.ProcessState.ExitCode()
 
-	stdout := string(stdoutBytes.Bytes())
-	stderr := string(stderrBytes.Bytes())
+	stdout := stdoutBytes.String()
+	stderr := stderrBytes.String()
 
 	fs := FsZipBase64()
 
@@ -52,5 +55,8 @@ func main() {
 	}
 	defer f.Close()
 
-	json.NewEncoder(f).Encode(output)
+	err = json.NewEncoder(f).Encode(output)
+	if err != nil {
+		panic(err)
+	}
 }
