@@ -31,9 +31,6 @@ func main() {
 	cmd.Stderr = &stderrBytes
 
 	err := cmd.Run()
-	if err != nil {
-		panic(err)
-	}
 
 	exitCode := cmd.ProcessState.ExitCode()
 
