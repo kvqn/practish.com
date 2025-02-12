@@ -13,7 +13,7 @@ export async function dockerRun(
 ) {
   // TODO: checks
   if ("entrypoint" in args) {
-    await $`docker run --rm -d --name ${args.name} --entrypoint ${args.entrypoint} --net practish-network ${args.image}`
+    await $`docker run --rm -d --name ${args.name} --entrypoint ${args.entrypoint} --net easyshell ${args.image}`
     return
   }
   throw new Error("not implemented")

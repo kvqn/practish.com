@@ -78,8 +78,8 @@ async function processQueueItem(
   const problem = await getProblemInfo(problemSlug)
 
   const containerName = `practish-${problemSlug}-${item.testcaseId}-${item.submissionId}`
-  const inputFilePath = `./.practish/inputs/${containerName}.sh`
-  const outputFilePath = `./.practish/outputs/${containerName}.json`
+  const inputFilePath = `.practish/inputs/${containerName}.sh`
+  const outputFilePath = `.practish/outputs/${containerName}.json`
   const image = `practish-${problemSlug}-${item.testcaseId}`
 
   await writeFile(inputFilePath, item.input)
@@ -87,7 +87,16 @@ async function processQueueItem(
 
   console.log("Running submission", containerName)
   const startedAt = new Date()
-  await $`docker run --rm --name ${containerName} -v ${inputFilePath}:/input.sh -v ${outputFilePath}:/output.json --entrypoint /submission-runner --net practish-network ${image}`
+
+  const inputFilePathForDocker = process.env.DIND_HOST_PREFIX
+    ? `${process.env.DIND_HOST_PREFIX}/${inputFilePath}`
+    : inputFilePath
+
+  const outputFilePathForDocker = process.env.DIND_HOST_PREFIX
+    ? `${process.env.DIND_HOST_PREFIX}/${outputFilePath}`
+    : outputFilePath
+
+  await $`docker run --rm --name ${containerName} -v ${inputFilePathForDocker}:/input.sh -v ${outputFilePathForDocker}:/output.json --entrypoint /submission-runner --net easyshell ${image}`
   const finishedAt = new Date()
   console.log("Submission complete", containerName)
 
