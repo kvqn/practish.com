@@ -7,9 +7,9 @@ services:
     ports:
       - "4000:4000"
     networks:
-      - practish-network
+      - easyshell
     restart: always
 networks:
-  practish-network:
-    name: practish-network
+  easyshell:
+    name: easyshell
     external: true

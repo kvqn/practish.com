@@ -23,6 +23,8 @@ export function PastSubmissions() {
     })()
   }, [problemId])
 
+  if (!pastSubmissions) return <div>loading</div>
+
   return (
     <div className="flex flex-col gap-4 p-4">
       <h3 className="text-center font-semibold">Past Submissions</h3>

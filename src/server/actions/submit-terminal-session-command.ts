@@ -47,10 +47,13 @@ export async function submitTerminalSessionCommand({
   console.log("container_name", container_name)
 
   const startedAt = new Date()
-  const resp = await fetch(`http://localhost:4000/${container_name}`, {
-    method: "POST",
-    body: command,
-  })
+  const resp = await fetch(
+    `http://easyshell-container-manager:4000/${container_name}`,
+    {
+      method: "POST",
+      body: command,
+    },
+  )
   const finishedAt = new Date()
 
   const { stdout, stderr } = ContainerIoResponseSchema.parse(await resp.json())
