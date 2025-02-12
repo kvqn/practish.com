@@ -30,7 +30,7 @@ func main() {
 	cmd.Stdout = &stdoutBytes
 	cmd.Stderr = &stderrBytes
 
-	err := cmd.Run()
+	_ = cmd.Run()
 
 	exitCode := cmd.ProcessState.ExitCode()
 
