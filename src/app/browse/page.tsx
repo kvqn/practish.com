@@ -2,7 +2,6 @@
 
 import { getProblemInfo } from "@/server/actions/get-problem-info"
 import { getProblems } from "@/server/actions/get-problems"
-import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
@@ -111,6 +110,8 @@ function Table() {
 }
 
 function Problem({ problem }: { problem: string }) {
+  const router = useRouter()
+
   const [info, setInfo] = useState<Awaited<
     ReturnType<typeof getProblemInfo>
   > | null>(null)
@@ -135,8 +136,6 @@ function Problem({ problem }: { problem: string }) {
         </td>
       </tr>
     )
-
-  const router = useRouter()
 
   return (
     <tr

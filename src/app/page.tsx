@@ -96,7 +96,7 @@ function Heading({
         }
       }
     })()
-  }, [])
+  }, [setAnimationDone])
 
   return (
     <h1 className="flex text-8xl font-bold">
@@ -136,7 +136,7 @@ function Tagline() {
         }
       }
     })()
-  }, [])
+  }, [randomSortedTaglines])
 
   return (
     <p
