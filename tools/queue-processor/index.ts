@@ -143,8 +143,8 @@ async function sleep(ms: number) {
 }
 
 async function init() {
-  await mkdir("./.practish/inputs", { recursive: true })
-  await mkdir("./.practish/outputs", { recursive: true })
+  await mkdir(".practish/inputs", { recursive: true })
+  await mkdir(".practish/outputs", { recursive: true })
 }
 
 async function loop() {
