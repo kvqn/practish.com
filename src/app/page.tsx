@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { cn, min, sleep } from "@/lib/utils"
+import { cn, min, max, sleep } from "@/lib/utils"
 import Link from "next/link"
 import { useEffect, useRef, useState } from "react"
 import { PiGithubLogo, PiGithubLogoDuotone } from "react-icons/pi"
@@ -61,7 +61,7 @@ function Heading({
         FINAL_TEXT_1.length + FINAL_TEXT_2.length + FINAL_TEXT_3.length
       let tick = 0
       while (true) {
-        await sleep(100)
+        await sleep(100 + Math.random() * 100)
         tick++
         if (text1.current)
           text1.current.textContent = FINAL_TEXT_1.slice(
@@ -71,13 +71,13 @@ function Heading({
         if (text2.current)
           text2.current.textContent = FINAL_TEXT_2.slice(
             0,
-            min(tick - FINAL_TEXT_1.length, FINAL_TEXT_2.length),
+            min(max(0, tick - FINAL_TEXT_1.length), FINAL_TEXT_2.length),
           )
         if (text3.current)
           text3.current.textContent = FINAL_TEXT_3.slice(
             0,
             min(
-              tick - FINAL_TEXT_1.length - FINAL_TEXT_2.length,
+              max(0, tick - FINAL_TEXT_1.length - FINAL_TEXT_2.length),
               FINAL_TEXT_3.length,
             ),
           )

@@ -13,6 +13,8 @@ services:
     networks:
       - easyshell
     restart: always
+    environment:
+      DATABASE_URL: postgres://postgres:password@postgres:5432/easyshell
 
   postgres:
     container_name: easyshell-postgres
@@ -46,6 +48,7 @@ services:
       - easyshell
     environment:
       DIND_HOST_PREFIX: ${PWD}
+      DATABASE_URL: postgres://postgres:password@postgres:5432/easyshell
     restart: always
 
 networks:

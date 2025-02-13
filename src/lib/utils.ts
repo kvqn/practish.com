@@ -24,3 +24,17 @@ export function min(...numbers: number[]): number {
   }
   return minimum
 }
+
+export function max(...numbers: number[]): number {
+  if (numbers.length === 0) {
+    throw new Error("max() requires at least one argument")
+  }
+
+  let maximum = numbers[0]!
+  for (let i = 1; i < numbers.length; i++) {
+    if (numbers[i]! > maximum) {
+      maximum = numbers[i]!
+    }
+  }
+  return maximum
+}
