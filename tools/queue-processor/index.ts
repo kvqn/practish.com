@@ -77,10 +77,10 @@ async function processQueueItem(
 
   const problem = await getProblemInfo(problemSlug)
 
-  const containerName = `practish-${problemSlug}-${item.testcaseId}-${item.submissionId}`
-  const inputFilePath = `.practish/inputs/${containerName}.sh`
-  const outputFilePath = `.practish/outputs/${containerName}.json`
-  const image = `practish-${problemSlug}-${item.testcaseId}`
+  const containerName = `easyshell-${problemSlug}-${item.testcaseId}-${item.submissionId}`
+  const inputFilePath = `.easyshell/inputs/${containerName}.sh`
+  const outputFilePath = `.easyshell/outputs/${containerName}.json`
+  const image = `easyshell-${problemSlug}-${item.testcaseId}`
 
   await writeFile(inputFilePath, item.input)
   await writeFile(outputFilePath, "")
@@ -143,8 +143,8 @@ async function sleep(ms: number) {
 }
 
 async function init() {
-  await mkdir(".practish/inputs", { recursive: true })
-  await mkdir(".practish/outputs", { recursive: true })
+  await mkdir(".easyshell/inputs", { recursive: true })
+  await mkdir(".easyshell/outputs", { recursive: true })
 }
 
 async function loop() {

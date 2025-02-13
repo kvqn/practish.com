@@ -2,7 +2,7 @@
   "lockfileVersion": 1,
   "workspaces": {
     "": {
-      "name": "practish",
+      "name": "easyshell",
       "dependencies": {
         "@auth/drizzle-adapter": "^1.7.4",
         "@mdx-js/loader": "^3.1.0",

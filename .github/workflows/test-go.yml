@@ -6,18 +6,18 @@ on:
     paths:
       - tools/container-manager/go.mod
       - tools/container-manager/main.go
-      - tools/problems/practish-base/container-io/go.mod
-      - tools/problems/practish-base/container-io/main.go
-      - tools/problems/practish-base/submission-runner/go.mod
-      - tools/problems/practish-base/submission-runner/main.go
+      - tools/problems/easyshell-base/container-io/go.mod
+      - tools/problems/easyshell-base/container-io/main.go
+      - tools/problems/easyshell-base/submission-runner/go.mod
+      - tools/problems/easyshell-base/submission-runner/main.go
   pull_request:
     paths:
       - tools/container-manager/go.mod
       - tools/container-manager/main.go
-      - tools/problems/practish-base/container-io/go.mod
-      - tools/problems/practish-base/container-io/main.go
-      - tools/problems/practish-base/submission-runner/go.mod
-      - tools/problems/practish-base/submission-runner/main.go
+      - tools/problems/easyshell-base/container-io/go.mod
+      - tools/problems/easyshell-base/container-io/main.go
+      - tools/problems/easyshell-base/submission-runner/go.mod
+      - tools/problems/easyshell-base/submission-runner/main.go
 
 jobs:
   container-manager:
@@ -43,7 +43,7 @@ jobs:
         uses: golangci/golangci-lint-action@v6
         with:
           version: v1.60
-          working-directory: tools/problems/practish-base/container-io
+          working-directory: tools/problems/easyshell-base/container-io
   submission-runner:
     runs-on: ubuntu-latest
     steps:
@@ -55,4 +55,4 @@ jobs:
         uses: golangci/golangci-lint-action@v6
         with:
           version: v1.60
-          working-directory: tools/problems/practish-base/submission-runner
+          working-directory: tools/problems/easyshell-base/submission-runner

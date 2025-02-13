@@ -11,8 +11,8 @@ import { HamburgerMenuIcon } from "@radix-ui/react-icons"
 function Logo() {
   return (
     <Link className="text-2xl" href="/">
-      <span className="font-bold">practi</span>
-      <span className="font-bold text-green-500">sh</span>
+      <span className="font-bold">easy</span>
+      <span className="font-bold text-green-500">shell</span>
     </Link>
   )
 }
