@@ -6,6 +6,7 @@ import { useEffect, useState } from "react"
 import { useSubmissionsContext } from "./submissions-context"
 import { IoIosArrowBack } from "react-icons/io"
 import { cn, sleep } from "@/lib/utils"
+import { getTestcaseInfo } from "@/server/actions/get-testcase-info"
 
 export function Submission({ submissionId }: { submissionId: number }) {
   const [info, setInfo] = useState<Awaited<
@@ -13,6 +14,9 @@ export function Submission({ submissionId }: { submissionId: number }) {
   > | null>(null)
 
   const { setSelectedSubmissionId } = useSubmissionsContext()
+  const [selectedTestcaseId, setSelectedTestcaseId] = useState<number | null>(
+    null,
+  )
 
   useEffect(() => {
     void (async () => {
@@ -35,6 +39,11 @@ export function Submission({ submissionId }: { submissionId: number }) {
 
   if (!info) return <div>loading</div>
 
+  if (selectedTestcaseId)
+    return (
+      <Testcase submissionId={submissionId} testcaseId={selectedTestcaseId} />
+    )
+
   return (
     <div>
       <h2 className="mt-4 text-center text-xl font-bold">
@@ -52,14 +61,19 @@ export function Submission({ submissionId }: { submissionId: number }) {
         {info.testcases.map((testcase) => (
           <div
             key={testcase.id}
-            className={cn("rounded-xl border px-8 py-4 transition-colors", {
-              "border-gray-500 bg-gray-200 hover:bg-gray-300":
-                testcase.status === "pending" || testcase.status === "running",
-              "border-red-500 bg-red-200 hover:bg-red-300":
-                testcase.status === "finished" && !testcase.passed,
-              "border-green-500 bg-green-200 hover:bg-green-300":
-                testcase.status === "finished" && testcase.passed,
-            })}
+            className={cn(
+              "cursor-pointer rounded-xl border px-8 py-4 transition-colors",
+              {
+                "border-gray-500 bg-gray-200 hover:bg-gray-300":
+                  testcase.status === "pending" ||
+                  testcase.status === "running",
+                "border-red-500 bg-red-200 hover:bg-red-300":
+                  testcase.status === "finished" && !testcase.passed,
+                "border-green-500 bg-green-200 hover:bg-green-300":
+                  testcase.status === "finished" && testcase.passed,
+              },
+            )}
+            onClick={() => setSelectedTestcaseId(testcase.id)}
           >
             <p className="font-semibold">Testcase #{testcase.id}</p>
             <p>
@@ -76,4 +90,26 @@ export function Submission({ submissionId }: { submissionId: number }) {
       </div>
     </div>
   )
+}
+
+function Testcase({
+  submissionId,
+  testcaseId,
+}: {
+  submissionId: number
+  testcaseId: number
+}) {
+  const [info, setInfo] = useState<Awaited<
+    ReturnType<typeof getTestcaseInfo>
+  > | null>(null)
+
+  useEffect(() => {
+    void (async () => {
+      setInfo(await getTestcaseInfo({ submissionId, testcaseId }))
+    })()
+  }, [testcaseId, submissionId])
+
+  if (!info) return <div>Loading...</div>
+
+  return <div>{JSON.stringify(info)}</div>
 }
