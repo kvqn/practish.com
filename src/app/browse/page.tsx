@@ -1,32 +1,75 @@
-import { Badge } from "@/components/ui/badge"
-import { getProblems, getProblemInfo } from "@/server/utils/problem"
+"use client"
 
-export default async function Page() {
-  const problems = await getProblems()
+import { getProblemInfo } from "@/server/actions/get-problem-info"
+import { getProblems } from "@/server/actions/get-problems"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+
+export default function Page() {
+  const [problems, setProblems] = useState<Awaited<
+    ReturnType<typeof getProblems>
+  > | null>(null)
+
+  useEffect(() => {
+    void (async () => {
+      setProblems(await getProblems())
+    })()
+  }, [])
+
+  if (!problems) return <div>Loading...</div>
+
   return (
-    <div className="flex flex-wrap gap-4">
-      {problems.map((problem) => (
-        <Problem key={problem} problem={problem} />
-      ))}
+    <div className="mx-auto w-1/2">
+      <table className="table-auto divide-y rounded-xl border">
+        <thead>
+          <tr className="divide-x *:p-2">
+            <th>#</th>
+            <th>Title</th>
+            <th>Solved</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y">
+          {problems.map((problem) => (
+            <Problem key={problem} problem={problem} />
+          ))}
+        </tbody>
+      </table>
     </div>
   )
 }
 
-async function Problem({ problem }: { problem: string }) {
-  const info = await getProblemInfo(problem)
+function Problem({ problem }: { problem: string }) {
+  const [info, setInfo] = useState<Awaited<
+    ReturnType<typeof getProblemInfo>
+  > | null>(null)
+
+  useEffect(() => {
+    void (async () => {
+      setInfo(await getProblemInfo(problem))
+    })()
+  }, [problem])
+
+  if (!info)
+    return (
+      <tr>
+        <td className="animate-pulse"></td>
+        <td></td>
+        <td></td>
+      </tr>
+    )
+
+  const router = useRouter()
+
   return (
-    <div className="flex flex-col divide-y overflow-hidden rounded-xl border">
-      <div className="h-20 w-40 bg-red-200 p-2"></div>
-      <div className="flex flex-col p-2">
-        <div className="text-lg font-semibold">{problem}</div>
-        <div className="flex gap-2">
-          {info.tags.map((tag) => (
-            <Badge key={tag} className="text-[8px]">
-              {tag}
-            </Badge>
-          ))}
-        </div>
-      </div>
-    </div>
+    <tr
+      className="cursor-pointer divide-x *:p-2"
+      onClick={() => {
+        router.push(`/problems/${info.slug}`)
+      }}
+    >
+      <td>{info.id}</td>
+      <td>{info.slug}</td>
+      <td>No</td>
+    </tr>
   )
 }
