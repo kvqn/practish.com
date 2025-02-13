@@ -116,9 +116,9 @@ export async function runTerminalSession({
   if (!problemSlug) throw new Error("Problem not found")
 
   await dockerRun({
-    image: `practish-${problemSlug}-${testcaseId}`,
+    image: `easyshell-${problemSlug}-${testcaseId}`,
     entrypoint: "/container-io",
-    name: `practish-${problemSlug}-${testcaseId}-${sessionId}`,
+    name: `easyshell-${problemSlug}-${testcaseId}-${sessionId}`,
   })
 }
 

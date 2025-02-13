@@ -43,7 +43,7 @@ export async function submitTerminalSessionCommand({
     throw new Error("Problem not found")
   }
 
-  const container_name = `practish-${problemSlug}-${terminalSession[0].testcaseId}-${sessionId}`
+  const container_name = `easyshell-${problemSlug}-${terminalSession[0].testcaseId}-${sessionId}`
   console.log("container_name", container_name)
 
   const startedAt = new Date()
