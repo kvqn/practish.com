@@ -8,14 +8,14 @@ import { rm } from "fs/promises"
 
 await checkProblems()
 
-const WORKING_DIR = ".practish"
+const WORKING_DIR = ".easyshell"
 const PROBLEMS_DIR = "src/app/problems/(problems)"
 
 await rm(WORKING_DIR, { recursive: true, force: true })
 
 await dockerBuild({
-  tag: "practish-base",
-  dir: "tools/problems/practish-base",
+  tag: "easyshell-base",
+  dir: "tools/problems/easyshell-base",
 })
 
 const problems = await getProblems()
@@ -23,23 +23,23 @@ const problems = await getProblems()
 for (const problem of problems) {
   const info = await getProblemInfo(problem)
   for (const testcase of info.testcases) {
-    const tag = `practish-${problem}-${testcase.id}`
-    await mkdir(`.practish/images/${tag}`, {
+    const tag = `easyshell-${problem}-${testcase.id}`
+    await mkdir(`.easyshell/images/${tag}`, {
       recursive: true,
     })
 
     await cp(
       `./problems/${problem}/testcases/${testcase.folder}`,
-      `.practish/images/${tag}/home`,
+      `.easyshell/images/${tag}/home`,
       {
         recursive: true,
       },
     )
 
     await writeFile(
-      `.practish/images/${tag}/Dockerfile`,
+      `.easyshell/images/${tag}/Dockerfile`,
       `
-FROM practish-base
+FROM easyshell-base
 COPY home /home
 
 ENTRYPOINT ["/input.sh"]
@@ -48,7 +48,7 @@ ENTRYPOINT ["/input.sh"]
 
     await dockerBuild({
       tag: tag,
-      dir: `.practish/images/${tag}`,
+      dir: `.easyshell/images/${tag}`,
     })
   }
 }

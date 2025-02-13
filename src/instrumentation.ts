@@ -1,6 +1,6 @@
 import { mkdir } from "fs/promises"
 
 export async function register() {
-  await mkdir(".practish/inputs", { recursive: true })
-  await mkdir(".practish/outputs", { recursive: true })
+  await mkdir(".easyshell/inputs", { recursive: true })
+  await mkdir(".easyshell/outputs", { recursive: true })
 }
