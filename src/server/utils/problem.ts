@@ -38,15 +38,15 @@ const ProblemConfigSchema = z
     capture_stderr: z.boolean().default(false),
     capture_exit_code: z.boolean().default(false),
     capture_fs: z.boolean().default(false),
-    successLogic: z
-      .function()
-      .args(ProblemOutputSchema)
-      .returns(z.union([z.boolean(), z.promise(z.boolean())])),
     testcases: z.array(
       z.object({
         id: z.number().positive(),
         folder: z.string(),
         public: z.boolean().default(false),
+        expected_stdout: z.string().optional(),
+        expected_stderr: z.string().optional(),
+        expected_exit_code: z.number().optional(),
+        expected_fs: z.record(z.union([z.string(), z.null()])).optional(),
       }),
     ),
   })
