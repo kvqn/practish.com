@@ -8,11 +8,14 @@ import {
   insertTerminalSession,
 } from "../db/queries"
 
+const FsSchema = z.record(z.union([z.string(), z.null()]))
+export type FsType = z.infer<typeof FsSchema>
+
 const ProblemOutputSchema = z.object({
   stdout: z.string().optional(),
   stderr: z.string().optional(),
   exit_code: z.number().optional(),
-  fs: z.record(z.union([z.string(), z.null()])).optional(),
+  fs: FsSchema.optional(),
 })
 
 const ProblemConfigSchema = z
@@ -46,7 +49,7 @@ const ProblemConfigSchema = z
         expected_stdout: z.string().optional(),
         expected_stderr: z.string().optional(),
         expected_exit_code: z.number().optional(),
-        expected_fs: z.record(z.union([z.string(), z.null()])).optional(),
+        expected_fs: FsSchema.optional(),
       }),
     ),
   })

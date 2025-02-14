@@ -14,6 +14,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import { FsType } from "@/server/utils/problem"
 
 export function Submission({ submissionId }: { submissionId: number }) {
   const [info, setInfo] = useState<Awaited<
@@ -160,6 +161,14 @@ function Testcase({
             </AccordionContent>
           </AccordionItem>
         ) : null}
+        {info.expected_fs !== undefined ? (
+          <AccordionItem value="stderr">
+            <AccordionTrigger>Files</AccordionTrigger>
+            <AccordionContent>
+              <FsDiff expected={info.expected_fs} actual={info.fs!} />
+            </AccordionContent>
+          </AccordionItem>
+        ) : null}
       </Accordion>
     </div>
   )
@@ -176,6 +185,20 @@ function Diff({ expected, actual }: { expected: string; actual: string }) {
         splitView={true}
         hideLineNumbers={true}
       />
+    </div>
+  )
+}
+
+function FsDiff({ expected, actual }: { expected: FsType; actual: FsType }) {
+  const files = new Set<string>()
+  for (const key in expected) files.add(key)
+  for (const key in actual) files.add(key)
+
+  return (
+    <div>
+      {Array.from(files.keys()).map((file) => (
+        <div key={file}>{file}</div>
+      ))}
     </div>
   )
 }
