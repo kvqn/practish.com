@@ -7,6 +7,13 @@ import { useSubmissionsContext } from "./submissions-context"
 import { IoIosArrowBack } from "react-icons/io"
 import { cn, sleep } from "@/lib/utils"
 import { getTestcaseInfo } from "@/server/actions/get-testcase-info"
+import ReactDiffViewer from "react-diff-viewer-continued"
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 
 export function Submission({ submissionId }: { submissionId: number }) {
   const [info, setInfo] = useState<Awaited<
@@ -41,7 +48,17 @@ export function Submission({ submissionId }: { submissionId: number }) {
 
   if (selectedTestcaseId)
     return (
-      <Testcase submissionId={submissionId} testcaseId={selectedTestcaseId} />
+      <div className="h-full">
+        <Button
+          variant="secondary"
+          onClick={() => setSelectedTestcaseId(null)}
+          className="flex items-center gap-2 pl-2"
+        >
+          <IoIosArrowBack className="m-0 p-0 text-xl" />
+          <p>Back</p>
+        </Button>
+        <Testcase submissionId={submissionId} testcaseId={selectedTestcaseId} />
+      </div>
     )
 
   return (
@@ -111,5 +128,54 @@ function Testcase({
 
   if (!info) return <div>Loading...</div>
 
-  return <div>{JSON.stringify(info)}</div>
+  return (
+    <div className={cn("flex h-full flex-col gap-4")}>
+      <div className="flex flex-col gap-0">
+        <h1 className="text-center text-xl font-bold">
+          Testcase #{testcaseId}
+        </h1>
+        <h2
+          className={cn("text-center font-semibold", {
+            "text-red-500": !info.passed,
+            "text-green-500": info.passed,
+          })}
+        >
+          {info.passed ? "Passed" : "Failed"}
+        </h2>
+      </div>
+      <Accordion type="single" collapsible>
+        {info.expected_stdout !== undefined ? (
+          <AccordionItem value="stdout">
+            <AccordionTrigger>Stdout</AccordionTrigger>
+            <AccordionContent>
+              <Diff expected={info.expected_stdout} actual={info.stdout} />
+            </AccordionContent>
+          </AccordionItem>
+        ) : null}
+        {info.expected_stderr !== undefined ? (
+          <AccordionItem value="stderr">
+            <AccordionTrigger>Stderr</AccordionTrigger>
+            <AccordionContent>
+              <Diff expected={info.expected_stderr} actual={info.stderr} />
+            </AccordionContent>
+          </AccordionItem>
+        ) : null}
+      </Accordion>
+    </div>
+  )
+}
+
+function Diff({ expected, actual }: { expected: string; actual: string }) {
+  return (
+    <div className="overflow-hidden rounded-xl border text-xs">
+      <ReactDiffViewer
+        leftTitle="Expected"
+        rightTitle="Actual"
+        oldValue={expected}
+        newValue={actual}
+        splitView={true}
+        hideLineNumbers={true}
+      />
+    </div>
+  )
 }
