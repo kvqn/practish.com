@@ -190,6 +190,5 @@ export async function getProblemSlugFromId(problemId: number) {
       return info.slug
     }
   }
-  // TODO: throw if not null
-  return null
+  throw new Error("Problem not found")
 }
