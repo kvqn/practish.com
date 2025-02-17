@@ -39,9 +39,6 @@ export async function submitTerminalSessionCommand({
   }
 
   const problemSlug = await getProblemSlugFromId(terminalSession[0].problemId)
-  if (!problemSlug) {
-    throw new Error("Problem not found")
-  }
 
   const container_name = `easyshell-${problemSlug}-${terminalSession[0].testcaseId}-${sessionId}`
   console.log("container_name", container_name)

@@ -49,7 +49,6 @@ export async function getTestcaseInfo({
   const problemSlug = await getProblemSlugFromId(
     submission.submission.problemId,
   )
-  if (!problemSlug) throw new Error("Problem not found")
 
   const problem = await getProblemInfo(problemSlug)
   const testcase = problem.testcases.find((t) => t.id === testcaseId)

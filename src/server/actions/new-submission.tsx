@@ -14,9 +14,6 @@ export async function newSubmission({
 }) {
   const user = await ensureAuth()
   const problemSlug = await getProblemSlugFromId(problemId)
-  if (!problemSlug) {
-    throw new Error("Problem not found")
-  }
 
   const submissionId = (
     await db

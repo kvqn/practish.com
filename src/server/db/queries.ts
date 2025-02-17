@@ -14,7 +14,6 @@ export async function getActiveTerminalSession({
   testcaseId: number
 }) {
   const problemSlug = await getProblemSlugFromId(problemId)
-  if (!problemSlug) throw new Error("Problem not found")
 
   const session = await db
     .select()
