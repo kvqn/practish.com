@@ -199,7 +199,7 @@ export const submissions = createTable("submissions", {
     .defaultNow(),
 })
 
-export const submission_testcases = createTable(
+export const submissionTestcases = createTable(
   "submission_testcase",
   {
     submissionId: integer("submission_id").notNull(),
