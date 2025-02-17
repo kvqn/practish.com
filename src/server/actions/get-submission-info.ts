@@ -3,7 +3,7 @@
 import { and, count, eq, lte } from "drizzle-orm"
 import { db } from "../db"
 import {
-  submission_testcases,
+  submissionTestcases,
   submissions,
   submissionTestcaseQueue,
 } from "../db/schema"
@@ -42,16 +42,16 @@ export async function getSubmissionInfo({
     .select({
       id: submissionTestcaseQueue.testcaseId,
       status: submissionTestcaseQueue.status,
-      passed: submission_testcases.passed,
+      passed: submissionTestcases.passed,
     })
     .from(submissionTestcaseQueue)
     .leftJoin(
-      submission_testcases,
+      submissionTestcases,
       and(
-        eq(submissionTestcaseQueue.testcaseId, submission_testcases.testcaseId),
+        eq(submissionTestcaseQueue.testcaseId, submissionTestcases.testcaseId),
         eq(
           submissionTestcaseQueue.submissionId,
-          submission_testcases.submissionId,
+          submissionTestcases.submissionId,
         ),
       ),
     )

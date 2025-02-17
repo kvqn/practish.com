@@ -1,6 +1,6 @@
 import { db } from "@/server/db"
 import {
-  submission_testcases,
+  submissionTestcases,
   submissions,
   submissionTestcaseQueue,
 } from "@/server/db/schema"
@@ -130,7 +130,7 @@ async function processQueueItem(
     }
   }
 
-  await db.insert(submission_testcases).values({
+  await db.insert(submissionTestcases).values({
     submissionId: item.submissionId,
     testcaseId: item.testcaseId,
     input: item.input,

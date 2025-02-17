@@ -1,7 +1,7 @@
 "use server"
 
 import { db } from "@/server/db"
-import { submission_testcases } from "../db/schema"
+import { submissionTestcases } from "../db/schema"
 import { and, eq } from "drizzle-orm"
 import { getSubmissionInfo } from "./get-submission-info"
 import { getProblemInfo, getProblemSlugFromId } from "../utils/problem"
@@ -16,20 +16,20 @@ export async function getTestcaseInfo({
 }) {
   const _dataFromDb = await db
     .select({
-      input: submission_testcases.input,
-      stdout: submission_testcases.stdout,
-      stderr: submission_testcases.stderr,
-      exitCode: submission_testcases.exitCode,
-      fsZipBase64: submission_testcases.fsZipBase64,
-      startedAt: submission_testcases.startedAt,
-      finishedAt: submission_testcases.finishedAt,
-      passed: submission_testcases.passed,
+      input: submissionTestcases.input,
+      stdout: submissionTestcases.stdout,
+      stderr: submissionTestcases.stderr,
+      exitCode: submissionTestcases.exitCode,
+      fsZipBase64: submissionTestcases.fsZipBase64,
+      startedAt: submissionTestcases.startedAt,
+      finishedAt: submissionTestcases.finishedAt,
+      passed: submissionTestcases.passed,
     })
-    .from(submission_testcases)
+    .from(submissionTestcases)
     .where(
       and(
-        eq(submission_testcases.submissionId, submissionId),
-        eq(submission_testcases.testcaseId, testcaseId),
+        eq(submissionTestcases.submissionId, submissionId),
+        eq(submissionTestcases.testcaseId, testcaseId),
       ),
     )
     .limit(1)

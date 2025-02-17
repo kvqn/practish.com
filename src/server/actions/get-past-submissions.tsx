@@ -4,7 +4,7 @@ import { and, desc, eq } from "drizzle-orm"
 import { db } from "../db"
 import { ensureAuth } from "../auth"
 import {
-  submission_testcases,
+  submissionTestcases,
   submissions,
   submissionTestcaseQueue,
 } from "../db/schema"
@@ -34,19 +34,19 @@ export async function getPastSubmissions({ problemId }: { problemId: number }) {
         .select({
           id: submissionTestcaseQueue.testcaseId,
           status: submissionTestcaseQueue.status,
-          passed: submission_testcases.passed,
+          passed: submissionTestcases.passed,
         })
         .from(submissionTestcaseQueue)
         .leftJoin(
-          submission_testcases,
+          submissionTestcases,
           and(
             eq(
               submissionTestcaseQueue.submissionId,
-              submission_testcases.submissionId,
+              submissionTestcases.submissionId,
             ),
             eq(
               submissionTestcaseQueue.testcaseId,
-              submission_testcases.testcaseId,
+              submissionTestcases.testcaseId,
             ),
           ),
         )
