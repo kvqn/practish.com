@@ -15,6 +15,7 @@ import { ProblemMarkdown } from "./_components/markdown"
 import { getProblems } from "@/server/utils/problem"
 import { AiTwotoneQuestionCircle } from "react-icons/ai"
 import Link from "next/link"
+import { ProblemHints } from "./_components/problem-hints"
 
 export default async function Page({
   params,
@@ -66,6 +67,7 @@ export default async function Page({
           <div>
             <ProblemHeading />
             <ProblemMarkdown slug={problemSlug} />
+            <ProblemHints slug={problemSlug} />
           </div>
         </ResizablePanel>
         <ResizableHandle />
