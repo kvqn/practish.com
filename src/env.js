@@ -3,10 +3,6 @@ import { z } from "zod"
 
 export const env = createEnv({
   server: {
-    DATABASE_URL: z.string().url(),
-    NODE_ENV: z
-      .enum(["development", "test", "production"])
-      .default("development"),
     NEXTAUTH_SECRET:
       process.env.NODE_ENV === "production"
         ? z.string()
@@ -18,9 +14,15 @@ export const env = createEnv({
       // VERCEL_URL doesn't include `https` so it cant be validated as a URL
       process.env.VERCEL ? z.string() : z.string().url(),
     ),
+    NODE_ENV: z
+      .enum(["development", "test", "production"])
+      .default("development"),
+
     DISCORD_CLIENT_ID: z.string(),
     DISCORD_CLIENT_SECRET: z.string(),
-    TEMP_DIR: z.string().default("/tmp"),
+
+    DATABASE_URL: z.string().url(),
+    CONTAINER_MANAGER_URL: z.string().url(),
   },
 
   client: {},
@@ -32,7 +34,7 @@ export const env = createEnv({
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
     DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
-    TEMP_DIR: process.env.TEMP_DIR,
+    CONTAINER_MANAGER_URL: process.env.CONTAINER_MANAGER_URL,
   },
 
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,

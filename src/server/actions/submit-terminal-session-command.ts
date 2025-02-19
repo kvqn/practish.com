@@ -5,14 +5,9 @@ import { db } from "../db"
 import { terminalSessions } from "../db/schema"
 import { ensureAuth } from "../auth"
 import { getProblemSlugFromId } from "../utils/problem"
-import { z } from "zod"
 import { insertTerminalSessionLog } from "../db/queries"
 import type { getTerminalSession } from "./get-terminal-session"
-
-const ContainerIoResponseSchema = z.object({
-  stdout: z.string(),
-  stderr: z.string(),
-})
+import { containerManagerExec } from "../utils/container-manager"
 
 export async function submitTerminalSessionCommand({
   sessionId,
@@ -44,16 +39,11 @@ export async function submitTerminalSessionCommand({
   console.log("container_name", container_name)
 
   const startedAt = new Date()
-  const resp = await fetch(
-    `http://easyshell-container-manager:4000/${container_name}`,
-    {
-      method: "POST",
-      body: command,
-    },
-  )
+  const { stdout, stderr } = await containerManagerExec({
+    containerName: container_name,
+    command,
+  })
   const finishedAt = new Date()
-
-  const { stdout, stderr } = ContainerIoResponseSchema.parse(await resp.json())
 
   const logId = await insertTerminalSessionLog({
     sessionId,
