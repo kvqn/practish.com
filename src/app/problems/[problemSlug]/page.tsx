@@ -16,6 +16,18 @@ import { getProblems } from "@/server/utils/problem"
 import { AiTwotoneQuestionCircle } from "react-icons/ai"
 import Link from "next/link"
 import { ProblemHints } from "./_components/problem-hints"
+import type { Metadata } from "next"
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ problemSlug: string }>
+}): Promise<Metadata> {
+  const { problemSlug } = await params
+  return {
+    title: `easyshell - ${problemSlug}`,
+  }
+}
 
 export async function generateStaticParams() {
   const problems = await getProblems()
