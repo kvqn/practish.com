@@ -76,7 +76,7 @@ async function processQueueItem(
 
   const problem = await getProblemInfo(problemSlug)
 
-  const containerName = `easyshell-${problemSlug}-${item.testcaseId}-${item.submissionId}`
+  const containerName = `easyshell-${problemSlug}-${item.testcaseId}-submission-${item.submissionId}`
   const inputFilePath = `.easyshell/inputs/${containerName}.sh`
   const outputFilePath = `.easyshell/outputs/${containerName}.json`
   const image = `easyshell-${problemSlug}-${item.testcaseId}`

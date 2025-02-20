@@ -1,7 +1,6 @@
 import { readdir } from "fs/promises"
 import z from "zod"
 import { dockerRun } from "./docker"
-import { randomUUID } from "crypto"
 import {
   getActiveTerminalSession,
   getTerminalSessionLogs,
@@ -113,7 +112,7 @@ export async function runTerminalSession({
 }: {
   problemId: string
   testcaseId: string
-  sessionId: string
+  sessionId: number
 }) {
   const problemSlug = await getProblemSlugFromId(parseInt(problemId))
   if (!problemSlug) throw new Error("Problem not found")
@@ -121,7 +120,7 @@ export async function runTerminalSession({
   await dockerRun({
     image: `easyshell-${problemSlug}-${testcaseId}`,
     entrypoint: "/container-io",
-    name: `easyshell-${problemSlug}-${testcaseId}-${sessionId}`,
+    name: `easyshell-${problemSlug}-${testcaseId}-session-${sessionId}`,
   })
 }
 
@@ -166,10 +165,7 @@ export async function createTerminalSession({
   problemId: number
   testcaseId: number
 }) {
-  const sessionId = randomUUID()
-
-  await insertTerminalSession({
-    sessionId: sessionId,
+  const sessionId = await insertTerminalSession({
     userId: userId,
     problemId: problemId,
     testcaseId: testcaseId,

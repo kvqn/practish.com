@@ -42,7 +42,7 @@ export async function getActiveTerminalSession({
   return null
 }
 
-export async function getTerminalSessionLogs(sessionId: string) {
+export async function getTerminalSessionLogs(sessionId: number) {
   let logs = await db
     .select({
       id: terminalSessionLogs.id,
@@ -66,23 +66,27 @@ export async function getTerminalSessionLogs(sessionId: string) {
 }
 
 export async function insertTerminalSession({
-  sessionId,
   problemId,
   userId,
   testcaseId,
 }: {
-  sessionId: string
   userId: string
   problemId: number
   testcaseId: number
 }) {
-  await db.insert(terminalSessions).values({
-    id: sessionId,
-    userId: userId,
-    problemId: problemId,
-    testcaseId: testcaseId,
-    expiresAt: new Date(Date.now() + 1000 * 60 * 60),
-  })
+  const inserted = await db
+    .insert(terminalSessions)
+    .values({
+      userId: userId,
+      problemId: problemId,
+      testcaseId: testcaseId,
+      expiresAt: new Date(Date.now() + 1000 * 60 * 60),
+    })
+    .returning({ id: terminalSessions.id })
+  if (!inserted[0]) {
+    throw new Error("Failed to insert terminal session")
+  }
+  return inserted[0].id
 }
 
 export async function insertTerminalSessionLog({
@@ -93,7 +97,7 @@ export async function insertTerminalSessionLog({
   startedAt,
   finishedAt,
 }: {
-  sessionId: string
+  sessionId: number
   stdin: string
   stdout: string
   stderr: string
