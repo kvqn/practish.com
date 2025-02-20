@@ -2,6 +2,10 @@ import { getProblemInfo } from "@/server/actions/get-problem-info"
 import { getProblems } from "@/server/utils/problem"
 import Link from "next/link"
 
+export const metadata = {
+  title: "easyshell - browse",
+}
+
 export default function Page() {
   return (
     <div className="flex flex-col items-center gap-8">
