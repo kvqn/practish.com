@@ -30,7 +30,7 @@ export async function getActiveTerminalSession({
 
   if (!session[0]) return null
 
-  const container_name = `easyshell-${problemSlug}-${testcaseId}-${session[0].id}`
+  const container_name = `easyshell-${problemSlug}-${testcaseId}-session-${session[0].id}`
   const isRunning = await isContainerRunning(container_name)
 
   if (isRunning) return session[0]

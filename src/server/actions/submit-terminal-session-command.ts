@@ -35,7 +35,7 @@ export async function submitTerminalSessionCommand({
 
   const problemSlug = await getProblemSlugFromId(terminalSession[0].problemId)
 
-  const container_name = `easyshell-${problemSlug}-${terminalSession[0].testcaseId}-${sessionId}`
+  const container_name = `easyshell-${problemSlug}-${terminalSession[0].testcaseId}-session-${sessionId}`
   console.log("container_name", container_name)
 
   const startedAt = new Date()
