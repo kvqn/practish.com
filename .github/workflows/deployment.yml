@@ -20,6 +20,8 @@ jobs:
       - name: Write SSH private key
         run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         shell: bash
+      - name: Set permissions for SSH private key
+        run: chmod 400 ~/.ssh/id_rsa
       - name: SSH known hosts
         run: ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
       - name: SSH into server
