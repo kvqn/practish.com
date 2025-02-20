@@ -130,10 +130,7 @@ export const verificationTokens = createTable(
 export const terminalSessions = createTable(
   "terminal_session",
   {
-    id: varchar("id", { length: 36 })
-      .notNull()
-      .primaryKey()
-      .$defaultFn(() => crypto.randomUUID()),
+    id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
     userId: varchar("user_id", { length: 255 })
       .notNull()
       .references(() => users.id),
@@ -161,7 +158,7 @@ export const terminalSessionLogs = createTable(
   "terminal_session_log",
   {
     id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
-    sessionId: varchar("session_id", { length: 36 }).notNull(),
+    sessionId: integer("session_id").notNull(),
     stdin: text("stdin").notNull(),
     stdout: text("stdout").notNull(),
     stderr: text("stderr").notNull(),
