@@ -14,7 +14,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import { FsType } from "@/server/utils/problem"
+import type { FsType } from "@/server/utils/problem"
 
 export function Submission({ submissionId }: { submissionId: number }) {
   const [info, setInfo] = useState<Awaited<
