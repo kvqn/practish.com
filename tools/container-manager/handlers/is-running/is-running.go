@@ -40,6 +40,6 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 
 	err = json.NewEncoder(w).Encode(respBody)
 	if err != nil {
-		http.Error(w, "Failed", http.StatusInternalServerError)
+		http.Error(w, "Failed "+err.Error(), http.StatusInternalServerError)
 	}
 }

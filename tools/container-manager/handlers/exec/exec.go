@@ -42,24 +42,24 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 
 	req, err := http.NewRequest("POST", endpoint, strings.NewReader(reqBody.Command))
 	if err != nil {
-		http.Error(w, "Failed", http.StatusInternalServerError)
+		http.Error(w, "Failed "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	resp, err := utils.HttpClient.Do(req)
 	if err != nil {
-		http.Error(w, "Failed", http.StatusInternalServerError)
+		http.Error(w, "Failed "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	resp_body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		http.Error(w, "Failed", http.StatusInternalServerError)
+		http.Error(w, "Failed "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 	_, err = w.Write(resp_body)
 	if err != nil {
-		http.Error(w, "Failed", http.StatusInternalServerError)
+		http.Error(w, "Failed"+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
