@@ -23,8 +23,7 @@ export async function containerManagerExec({
   if (!resp.ok) {
     throw new Error(await resp.text())
   }
-  const resp_json = await resp.json()
-  const resp_body = ContainerManagerExecResponseSchema.parse(resp_json)
+  const resp_body = ContainerManagerExecResponseSchema.parse(await resp.json())
   return resp_body
 }
 
@@ -42,8 +41,9 @@ export async function containerManagerIsRunning(containerName: string) {
   if (!resp.ok) {
     throw new Error(await resp.text())
   }
-  const resp_json = await resp.json()
-  const resp_body = ContainerManagerIsRunningResponseSchema.parse(resp_json)
+  const resp_body = ContainerManagerIsRunningResponseSchema.parse(
+    await resp.json(),
+  )
   return resp_body.is_running
 }
 

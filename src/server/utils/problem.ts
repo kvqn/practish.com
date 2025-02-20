@@ -11,12 +11,12 @@ import {
 const FsSchema = z.record(z.union([z.string(), z.null()]))
 export type FsType = z.infer<typeof FsSchema>
 
-const ProblemOutputSchema = z.object({
-  stdout: z.string().optional(),
-  stderr: z.string().optional(),
-  exit_code: z.number().optional(),
-  fs: FsSchema.optional(),
-})
+//const ProblemOutputSchema = z.object({ // TODO: remove this
+//  stdout: z.string().optional(),
+//  stderr: z.string().optional(),
+//  exit_code: z.number().optional(),
+//  fs: FsSchema.optional(),
+//})
 
 const ProblemConfigSchema = z
   .object({
@@ -56,7 +56,7 @@ const ProblemConfigSchema = z
   .strict()
 
 export type ProblemConfig = z.infer<typeof ProblemConfigSchema>
-export type ProblemOutput = z.infer<typeof ProblemOutputSchema>
+//export type ProblemOutput = z.infer<typeof ProblemOutputSchema> // TODO: remove this
 
 /**
  * Read and return the problem config, making sure it is valid.
