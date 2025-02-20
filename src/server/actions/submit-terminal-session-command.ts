@@ -13,7 +13,7 @@ export async function submitTerminalSessionCommand({
   sessionId,
   command,
 }: {
-  sessionId: string
+  sessionId: number
   command: string
 }): Promise<Awaited<ReturnType<typeof getTerminalSession>>["logs"][0]> {
   const user = await ensureAuth()
