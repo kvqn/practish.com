@@ -11,5 +11,9 @@ export default function Layout({
     toast("You are already logged in")
     redirect("/")
   }
-  return children
+  return (
+    <div className="flex h-full w-full items-center justify-center">
+      {children}
+    </div>
+  )
 }
