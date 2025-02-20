@@ -1,9 +1,7 @@
-import { $ } from "execa"
-
-export async function dockerBuild({ tag, dir }: { tag: string; dir: string }) {
-  console.log(`building ${tag}`)
-  await $`docker build -t ${tag} ${dir}`
-}
+import {
+  containerManagerCreate,
+  containerManagerIsRunning,
+} from "./container-manager"
 
 export async function dockerRun(
   args: {
@@ -13,25 +11,19 @@ export async function dockerRun(
 ) {
   // TODO: checks
   if ("entrypoint" in args) {
-    await $`docker run --rm -d --name ${args.name} --entrypoint ${args.entrypoint} --net easyshell ${args.image}`
+    //await $`docker run --rm -d --name ${args.name} --entrypoint ${args.entrypoint} --net easyshell ${args.image}`
+    await containerManagerCreate({
+      container_name: args.name,
+      image: args.image,
+      volume_mounts: [],
+      entry_point: args.entrypoint,
+    })
     return
   }
   throw new Error("not implemented")
   //await $`docker run --rm -d --name ${args.name} -v ${args.input}:/input.sh --entrypoint /submission-runner --net easyshell-network ${args.image}`
 }
 
-export async function getContainerIp(container_name: string) {
-  const { stdout } =
-    await $`docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${container_name}`
-  console.log("container ip", stdout)
-  return stdout
-}
-
 export async function isContainerRunning(container_name: string) {
-  try {
-    await $`docker inspect ${container_name}`
-    return true
-  } catch {
-    return false
-  }
+  return await containerManagerIsRunning(container_name)
 }
