@@ -1,9 +1,6 @@
-"use client"
-
 import { getProblemInfo } from "@/server/actions/get-problem-info"
-import { getProblems } from "@/server/actions/get-problems"
-import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { getProblems } from "@/server/utils/problem"
+import Link from "next/link"
 
 export default function Page() {
   return (
@@ -21,76 +18,8 @@ export default function Page() {
   )
 }
 
-function Table() {
-  const [problems, setProblems] = useState<Awaited<
-    ReturnType<typeof getProblems>
-  > | null>(null)
-
-  useEffect(() => {
-    void (async () => {
-      setProblems(await getProblems())
-    })()
-  }, [])
-
-  if (!problems)
-    return (
-      <table className="w-1/2 table-auto divide-y rounded-xl border">
-        <thead>
-          <tr className="divide-x *:p-2">
-            <th>#</th>
-            <th>Title</th>
-            <th>Solved</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y">
-          <tr className="h-8 divide-x *:p-2">
-            <td>
-              <p className="h-2 animate-pulse rounded bg-gray-200" />
-            </td>
-            <td>
-              <p className="h-2 animate-pulse rounded bg-gray-200" />
-            </td>
-            <td>
-              <p className="h-2 animate-pulse rounded bg-gray-200" />
-            </td>
-          </tr>
-          <tr className="h-8 divide-x *:p-2">
-            <td>
-              <p className="h-2 animate-pulse rounded bg-gray-200" />
-            </td>
-            <td>
-              <p className="h-2 animate-pulse rounded bg-gray-200" />
-            </td>
-            <td>
-              <p className="h-2 animate-pulse rounded bg-gray-200" />
-            </td>
-          </tr>
-          <tr className="h-8 divide-x *:p-2">
-            <td>
-              <p className="h-2 animate-pulse rounded bg-gray-200" />
-            </td>
-            <td>
-              <p className="h-2 animate-pulse rounded bg-gray-200" />
-            </td>
-            <td>
-              <p className="h-2 animate-pulse rounded bg-gray-200" />
-            </td>
-          </tr>
-          <tr className="h-8 divide-x *:p-2">
-            <td>
-              <p className="h-2 animate-pulse rounded bg-gray-200" />
-            </td>
-            <td>
-              <p className="h-2 animate-pulse rounded bg-gray-200" />
-            </td>
-            <td>
-              <p className="h-2 animate-pulse rounded bg-gray-200" />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    )
-
+async function Table() {
+  const problems = await getProblems()
   return (
     <table className="w-1/2 table-auto divide-y rounded-xl border">
       <thead>
@@ -109,44 +38,16 @@ function Table() {
   )
 }
 
-function Problem({ problem }: { problem: string }) {
-  const router = useRouter()
-
-  const [info, setInfo] = useState<Awaited<
-    ReturnType<typeof getProblemInfo>
-  > | null>(null)
-
-  useEffect(() => {
-    void (async () => {
-      setInfo(await getProblemInfo(problem))
-    })()
-  }, [problem])
-
-  if (!info)
-    return (
-      <tr className="h-8 divide-x *:p-2">
-        <td>
-          <p className="h-2 animate-pulse rounded bg-gray-200" />
-        </td>
-        <td>
-          <p className="h-2 animate-pulse rounded bg-gray-200" />
-        </td>
-        <td>
-          <p className="h-2 animate-pulse rounded bg-gray-200" />
-        </td>
-      </tr>
-    )
-
+async function Problem({ problem }: { problem: string }) {
+  const info = await getProblemInfo(problem)
   return (
-    <tr
-      className="cursor-pointer divide-x transition-colors *:p-2 hover:bg-gray-100"
-      onClick={() => {
-        router.push(`/problems/${info.slug}`)
-      }}
+    <Link
+      href={`/problems/${info.slug}`}
+      className="table-row cursor-pointer divide-x transition-colors *:p-2 hover:bg-gray-100"
     >
       <td className="text-center">{info.id}</td>
       <td>{info.slug}</td>
       <td>No</td>
-    </tr>
+    </Link>
   )
 }
