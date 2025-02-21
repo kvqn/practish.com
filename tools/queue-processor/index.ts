@@ -105,7 +105,10 @@ async function processQueueItem(
 
   console.log("Output", output)
 
-  const fs = await unzip(output.fs_zip_base64)
+  const fs =
+    output.fs_zip_base64.length === 0
+      ? await unzip(output.fs_zip_base64)
+      : undefined
 
   const testcase = problem.testcases.find((t) => t.id === item.testcaseId)
   if (!testcase) throw new Error("Testcase not found")
@@ -121,6 +124,9 @@ async function processQueueItem(
     passed = output.exit_code === testcase.expected_exit_code
 
   if (passed && testcase.expected_fs !== undefined) {
+    if (fs === undefined) {
+      passed = false
+    }
     for (const [path, expected] of Object.entries(testcase.expected_fs)) {
       const actual = fs[path]
       if (actual !== expected) {

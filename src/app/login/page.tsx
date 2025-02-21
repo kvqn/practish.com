@@ -49,7 +49,7 @@ export default function Page() {
           className="group flex items-center gap-2 hover:bg-gray-200"
           variant="secondary"
           onClick={async () => {
-            await signIn("github")
+            await signIn("google")
           }}
         >
           <div className="relative h-8 w-6">
