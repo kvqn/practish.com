@@ -1,53 +1,57 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useState } from "react"
+import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Switch } from "@/components/ui/switch"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 export default function AccountSettingsPage() {
-  const [image, setImage] = useState<string | null>(null);
+  const [image, setImage] = useState<string | null>(null)
 
-  const [discordConnected, setDiscordConnected] = useState(true);
-  const [githubConnected, setGithubConnected] = useState(true);
-  const [googleConnected, setGoogleConnected] = useState(false);
+  const [discordConnected, setDiscordConnected] = useState(true)
+  const [githubConnected, setGithubConnected] = useState(true)
+  const [googleConnected, setGoogleConnected] = useState(false)
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
+    const file = event.target.files?.[0]
     if (file) {
-      const reader = new FileReader();
+      const reader = new FileReader()
       reader.onload = (e) => {
         if (e.target?.result) {
-          setImage(e.target.result as string);
+          setImage(e.target.result as string)
         }
-      };
-      reader.readAsDataURL(file);
+      }
+      reader.readAsDataURL(file)
     }
-  };
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
-      <div className="max-w-4xl mx-auto space-y-6">
+      <div className="mx-auto max-w-4xl space-y-6">
         <Card>
           <CardHeader>
             <h2 className="text-xl font-bold">Personal Information</h2>
-            <p className="text-sm text-gray-500">Update your personal details.</p>
+            <p className="text-sm text-gray-500">
+              Update your personal details.
+            </p>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center space-x-4">
               <Avatar>
-                <AvatarImage src={image ?? "/path/to/default-profile-pic.jpg"} />
+                <AvatarImage
+                  src={image ?? "/path/to/default-profile-pic.jpg"}
+                />
                 <AvatarFallback>PP</AvatarFallback>
               </Avatar>
 
               <input
                 type="file"
-                accept="image/*" 
+                accept="image/*"
                 onChange={handleFileChange}
                 id="profile-picture-upload"
-                className="hidden" 
+                className="hidden"
               />
 
               <label htmlFor="profile-picture-upload">
@@ -58,16 +62,31 @@ export default function AccountSettingsPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Name</label>
-              <Input placeholder="Enter your name" className="mt-1 text-gray-500" />
+              <label className="block text-sm font-medium text-gray-700">
+                Name
+              </label>
+              <Input
+                placeholder="Enter your name"
+                className="mt-1 text-gray-500"
+              />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Email</label>
-              <Input placeholder="email@gmail.com" className="mt-1 text-gray-500" />
+              <label className="block text-sm font-medium text-gray-700">
+                Email
+              </label>
+              <Input
+                placeholder="email@gmail.com"
+                className="mt-1 text-gray-500"
+              />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Bio</label>
-              <Input placeholder="Tell everyone about yourself" className="mt-1 text-gray-500" />
+              <label className="block text-sm font-medium text-gray-700">
+                Bio
+              </label>
+              <Input
+                placeholder="Tell everyone about yourself"
+                className="mt-1 text-gray-500"
+              />
             </div>
           </CardContent>
           <CardFooter className="flex justify-end">
@@ -78,17 +97,29 @@ export default function AccountSettingsPage() {
         <Card>
           <CardHeader>
             <h2 className="text-xl font-bold">Security</h2>
-            <p className="text-sm text-gray-500">Manage your account security.</p>
+            <p className="text-sm text-gray-500">
+              Manage your account security.
+            </p>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">Change Password</label>
-              <Input type="password" placeholder="New Password" className="mt-1" />
+              <label className="block text-sm font-medium text-gray-700">
+                Change Password
+              </label>
+              <Input
+                type="password"
+                placeholder="New Password"
+                className="mt-1"
+              />
             </div>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-700">Two-Factor Authentication</p>
-                <p className="text-sm text-gray-500">Add an extra layer of security.</p>
+                <p className="text-sm font-medium text-gray-700">
+                  Two-Factor Authentication
+                </p>
+                <p className="text-sm text-gray-500">
+                  Add an extra layer of security.
+                </p>
               </div>
               <Switch />
             </div>
@@ -102,7 +133,9 @@ export default function AccountSettingsPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">Language</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Language
+              </label>
               <Input defaultValue="English" className="mt-1" />
             </div>
             <div className="flex items-center justify-between">
@@ -176,8 +209,12 @@ export default function AccountSettingsPage() {
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-700">Delete Account</p>
-                <p className="text-sm text-gray-500">Permanently delete your account.</p>
+                <p className="text-sm font-medium text-gray-700">
+                  Delete Account
+                </p>
+                <p className="text-sm text-gray-500">
+                  Permanently delete your account.
+                </p>
               </div>
               <Button variant="destructive">Delete</Button>
             </div>
@@ -185,5 +222,5 @@ export default function AccountSettingsPage() {
         </Card>
       </div>
     </div>
-  );
+  )
 }
