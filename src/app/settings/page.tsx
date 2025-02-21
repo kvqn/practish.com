@@ -10,7 +10,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 export default function AccountSettingsPage() {
   const [image, setImage] = useState<string | null>(null);
 
-  // State to manage connection status for integrations
   const [discordConnected, setDiscordConnected] = useState(true);
   const [githubConnected, setGithubConnected] = useState(true);
   const [googleConnected, setGoogleConnected] = useState(false);
@@ -25,7 +24,7 @@ export default function AccountSettingsPage() {
           setImage(e.target.result as string);
         }
       };
-      reader.readAsDataURL(file); // Convert file to a data URL
+      reader.readAsDataURL(file);
     }
   };
 
@@ -77,7 +76,6 @@ export default function AccountSettingsPage() {
           </CardFooter>
         </Card>
 
-        {/* Security Section */}
         <Card>
           <CardHeader>
             <h2 className="text-xl font-bold">Security</h2>
@@ -98,7 +96,6 @@ export default function AccountSettingsPage() {
           </CardContent>
         </Card>
 
-        {/* Preferences Section */}
         <Card>
           <CardHeader>
             <h2 className="text-xl font-bold">Preferences</h2>
@@ -119,14 +116,12 @@ export default function AccountSettingsPage() {
           </CardContent>
         </Card>
 
-        {/* Integrations Section */}
         <Card>
           <CardHeader>
             <h2 className="text-xl font-bold">Integrations</h2>
             <p className="text-sm text-gray-500">Connect your accounts.</p>
           </CardHeader>
           <CardContent className="space-y-4">
-            {/* Discord Integration */}
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-700">Discord</p>
@@ -142,7 +137,6 @@ export default function AccountSettingsPage() {
               </Button>
             </div>
 
-            {/* GitHub Integration */}
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-700">GitHub</p>
@@ -158,7 +152,6 @@ export default function AccountSettingsPage() {
               </Button>
             </div>
 
-            {/* Google Integration */}
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-700">Google</p>
@@ -176,7 +169,6 @@ export default function AccountSettingsPage() {
           </CardContent>
         </Card>
 
-        {/* Danger Zone Section */}
         <Card className="border-red-500">
           <CardHeader>
             <h2 className="text-xl font-bold text-red-500">Danger Zone</h2>
