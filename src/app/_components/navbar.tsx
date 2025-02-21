@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { getServerUser } from "@/server/auth"
 import Link from "next/link"
+
 import {
   Popover,
   PopoverContent,
@@ -58,12 +59,21 @@ async function User() {
     return (
       <div className="flex w-full flex-col">
         <div className="flex w-fit gap-2 rounded-md border px-4 py-2">
-          <Avatar className="h-6 w-6">
-            <AvatarImage src={user.image ?? ""} />
-            <AvatarFallback>{user.name![0]}</AvatarFallback>
-          </Avatar>
-          <p>{user.name}</p>
+          <Button>
+            <Avatar className="mr-1.5 h-6 w-6">
+              <AvatarImage src={user.image ?? ""} />
+              <AvatarFallback>{user.name![0]}</AvatarFallback>
+            </Avatar>
+            <p>{user.name}</p>
+          </Button>
         </div>
+
+        <Link href="/settings" className="w-full">
+          <Button variant="outline" className="mt-2 w-full">
+            Settings
+          </Button>
+        </Link>
+
         <Link href="/logout" className="w-full">
           <Button variant="outline" className="mt-2 w-full">
             Logout
