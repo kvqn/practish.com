@@ -14,7 +14,6 @@ export default function AccountSettingsPage() {
   const [githubConnected, setGithubConnected] = useState(true);
   const [googleConnected, setGoogleConnected] = useState(false);
 
-  // Handle file input change for profile picture
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
