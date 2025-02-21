@@ -40,8 +40,7 @@ export default function AccountSettingsPage() {
           <CardContent className="space-y-4">
             <div className="flex items-center space-x-4">
               <Avatar>
-                <AvatarImage
-                />
+                <AvatarImage />
                 <AvatarFallback>PP</AvatarFallback>
               </Avatar>
 
