@@ -41,7 +41,6 @@ export default function AccountSettingsPage() {
             <div className="flex items-center space-x-4">
               <Avatar>
                 <AvatarImage
-                  src={image ?? "/path/to/default-profile-pic.jpg"}
                 />
                 <AvatarFallback>PP</AvatarFallback>
               </Avatar>
