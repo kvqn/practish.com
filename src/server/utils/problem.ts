@@ -36,10 +36,6 @@ const ProblemConfigSchema = z
           .refine((val) => !val.endsWith(" ")),
       )
       .default([]),
-    capture_stdout: z.boolean().default(false),
-    capture_stderr: z.boolean().default(false),
-    capture_exit_code: z.boolean().default(false),
-    capture_fs: z.boolean().default(false),
     testcases: z.array(
       z.object({
         id: z.number().positive(),

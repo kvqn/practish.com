@@ -14,7 +14,7 @@
     "next:lint": "bunx next lint",
     "next:start": "bunx next start",
     "problems:lint": "bun tools/problems/lint",
-    "problems:build": "DATABASE_URL='http://random' bun tools/problems/build",
+    "problems:build": "bun tools/problems/build",
     "queue-processor:dev": "bun --watch tools/queue-processor",
     "queue-processor:start": "bun tools/queue-processor",
     "container-manager:up": "docker compose up -f tools/container-manager/docker-compose.yml",

@@ -1,15 +1,13 @@
 import { getProblemInfo, getProblems } from "@/server/utils/problem"
-import { checkProblems } from "./lint"
 import { writeFile } from "fs/promises"
 import { cp } from "fs/promises"
 import { mkdir } from "fs/promises"
 import { rm } from "fs/promises"
 import { $ } from "execa"
 
-await checkProblems()
+import "./lint"
 
 const WORKING_DIR = ".easyshell"
-const PROBLEMS_DIR = "src/app/problems/(problems)"
 
 await rm(WORKING_DIR, { recursive: true, force: true })
 

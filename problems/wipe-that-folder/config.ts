@@ -32,10 +32,6 @@ const config: ProblemConfig = {
   title: "Wipe That Folder",
   description: `A whole folder needs to be erased. Make sure it’s gone—completely! 🚮`,
   tags: ["Basics"],
-  capture_stdout: false,
-  capture_stderr: false,
-  capture_exit_code: false,
-  capture_fs: true,
   testcases: [
     await testcaseConfig({ id: 1, isPublic: true }),
     await testcaseConfig({ id: 2, isPublic: true }),

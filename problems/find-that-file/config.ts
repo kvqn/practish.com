@@ -36,10 +36,6 @@ const config: ProblemConfig = {
   title: "Find That File",
   description: `Hunt down a specific file and reveal its full path—no more guessing where it’s hiding! 🔍`,
   tags: ["Basics"],
-  capture_stdout: true,
-  capture_stderr: false,
-  capture_exit_code: false,
-  capture_fs: false,
   testcases: [
     await testcaseConfig({ id: 1, isPublic: true }),
     await testcaseConfig({ id: 2, isPublic: true }),
