@@ -35,10 +35,6 @@ const config: ProblemConfig = {
   title: "Bulk Move",
   description: `A scattered mess of log files? Gather them all into one place while leaving everything else untouched! 📂`,
   tags: ["Basics"],
-  capture_stdout: false,
-  capture_stderr: false,
-  capture_exit_code: false,
-  capture_fs: true,
   testcases: [
     await testcaseConfig({ id: 1, isPublic: true }),
     await testcaseConfig({ id: 2, isPublic: true }),

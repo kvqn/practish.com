@@ -32,10 +32,6 @@ const config: ProblemConfig = {
   title: "Nuke All Matches",
   description: `Some files are just junk, and they’re everywhere! Find them all and wipe them out. 💥`,
   tags: ["Basics"],
-  capture_stdout: false,
-  capture_stderr: false,
-  capture_exit_code: false,
-  capture_fs: true,
   testcases: [
     await testcaseConfig({ id: 1, isPublic: true }),
     await testcaseConfig({ id: 2, isPublic: true }),
