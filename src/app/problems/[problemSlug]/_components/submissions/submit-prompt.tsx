@@ -29,6 +29,7 @@ export function SubmitPrompt() {
         value={input}
         onChange={(e) => setInput(e.target.value)}
         disabled={submitting}
+        className="border-2 border-neutral-400 font-mono"
       />
       <Button disabled={submitting} onClick={handleSubmit}>
         Submit

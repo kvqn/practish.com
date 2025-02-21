@@ -25,13 +25,17 @@ export async function ProblemHints({ slug }: { slug: string }) {
 
   return (
     <div className="mt-6 border-t">
-      <h2 className="mt-6 text-xl font-bold">Hints</h2>
+      <h2 className="mb-2 mt-6 text-xl font-bold">Hints</h2>
 
-      <Accordion type="single" collapsible>
+      <Accordion type="single" collapsible className="space-y-4">
         {hints.map(({ file: _, node }, i) => (
-          <AccordionItem value={`${i + 1}`} key={i + 1}>
-            <AccordionTrigger className="text-md font-semibold">{`Hint #${i + 1}`}</AccordionTrigger>
-            <AccordionContent>{node}</AccordionContent>
+          <AccordionItem
+            value={`${i + 1}`}
+            key={i + 1}
+            className="border-top-0 rounded-lg border bg-neutral-100 shadow"
+          >
+            <AccordionTrigger className="text-md rounded-lg border bg-white px-4 py-2 font-semibold shadow hover:bg-neutral-50">{`Hint #${i + 1}`}</AccordionTrigger>
+            <AccordionContent className="px-4 py-2">{node}</AccordionContent>
           </AccordionItem>
         ))}
       </Accordion>

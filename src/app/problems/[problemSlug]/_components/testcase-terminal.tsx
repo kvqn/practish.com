@@ -9,8 +9,17 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
+
+import { Slider } from "@/components/ui/slider"
+
 export function TestcaseTerminal({ testcase }: { testcase: number }) {
-  const { id: problemId } = useProblem()
+  const { id: problemId, slug: problemSlug } = useProblem()
 
   const [session, setSession] = useState<Awaited<
     ReturnType<typeof getTerminalSession>
@@ -20,7 +29,15 @@ export function TestcaseTerminal({ testcase }: { testcase: number }) {
   const [running, setRunning] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const terminalRef = useRef<HTMLDivElement>(null)
-  const [showOptions, setShowOptions] = useState(false)
+  //const [showOptions, setShowOptions] = useState(false)
+
+  const [options, setOptions] = useState<{
+    fontSize: number
+    showTimes: boolean
+  }>({
+    fontSize: 1,
+    showTimes: false,
+  })
 
   async function handleSubmit() {
     if (!session) return
@@ -64,14 +81,33 @@ export function TestcaseTerminal({ testcase }: { testcase: number }) {
     })()
   }, [problemId, testcase])
 
-  if (!session) return <div>loading</div>
+  if (!session)
+    return (
+      <div className="flex flex-col rounded-md border-4 border-gray-400 font-geist-mono">
+        <div className="flex h-80 flex-col overflow-scroll whitespace-pre-line bg-black px-2 py-1"></div>
+        <div className="flex">
+          <input
+            className={cn(
+              "flex-grow bg-neutral-800 px-2 py-1 text-white outline-none",
+            )}
+          />
+          <button className="w-20 select-none bg-green-800 px-2 text-neutral-200 hover:bg-green-700"></button>
+        </div>
+      </div>
+    )
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-col rounded-md border-4 border-gray-400 font-geist-mono">
+      <div className="relative flex flex-col rounded-md border-4 border-gray-400 font-geist-mono">
+        <p className="absolute left-1/2 top-0 -translate-x-1/2 rounded-b-md bg-neutral-800 px-4 text-center font-semibold text-white">
+          {problemSlug}-{testcase}
+        </p>
         <div
           className="flex h-80 flex-col overflow-scroll whitespace-pre-line bg-black px-2 py-1"
           ref={terminalRef}
+          style={{
+            fontSize: `${options.fontSize}rem`,
+          }}
         >
           {session.logs.map((log) => (
             <div key={log.id}>
@@ -88,8 +124,8 @@ export function TestcaseTerminal({ testcase }: { testcase: number }) {
         <div className="flex">
           <input
             ref={inputRef}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
+            value={`>>> ${input}`}
+            onChange={(e) => setInput(e.target.value.slice(4))}
             disabled={running}
             className={cn(
               "flex-grow bg-neutral-800 px-2 py-1 text-white outline-none",
@@ -117,30 +153,46 @@ export function TestcaseTerminal({ testcase }: { testcase: number }) {
           </button>
         </div>
       </div>
-      <div className="flex flex-col">
-        <button
-          className="text-center font-semibold"
-          onClick={() => setShowOptions(!showOptions)}
+      <Accordion type="single" collapsible className="space-y-4">
+        <AccordionItem
+          value={`options`}
+          className="border-top-0 rounded-lg border bg-neutral-100 shadow"
         >
-          {showOptions ? "Hide Options" : "View Options"}
-        </button>
-        <div
-          className={cn("overflow-hidden bg-gray-400 transition-all", {
-            "h-0": !showOptions,
-            "h-40": showOptions,
-          })}
-        >
-          <div className="flex flex-col p-4">
-            <Button className="bg-green-800 text-neutral-200">
-              Restart Terminal
-            </Button>
-            <div className="flex items-center gap-2">
-              <Checkbox />
-              <p>Show Times</p>
+          <AccordionTrigger className="text-md rounded-lg border bg-white px-4 py-2 font-semibold shadow hover:bg-neutral-50">
+            <p className="flex-grow text-center">Terminal Options</p>
+          </AccordionTrigger>
+          <AccordionContent className="px-4 py-2">
+            <div className="flex flex-col gap-4 p-4 *:rounded-md *:bg-white *:p-4 *:shadow">
+              <div className="space-y-2">
+                <label htmlFor="font-size" className="font-semibold">
+                  Font Size
+                </label>
+                <Slider
+                  name="font-size"
+                  value={options.fontSize}
+                  max={2}
+                  step={0.1}
+                  onValueChange={(val) => {
+                    setOptions((prev) => ({
+                      ...prev,
+                      fontSize: val,
+                    }))
+                  }}
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <Checkbox />
+                <p>Show Times</p>
+              </div>
+              <div>
+                <Button className="w-full bg-green-800 text-neutral-200">
+                  Restart Terminal
+                </Button>
+              </div>
             </div>
-          </div>
-        </div>
-      </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   )
 }

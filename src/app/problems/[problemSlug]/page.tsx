@@ -91,7 +91,7 @@ export default async function Page({
         </ResizablePanel>
         <ResizableHandle />
         <ResizablePanel className="flex w-full flex-col p-4">
-          <Tabs defaultValue="submissions" className="">
+          <Tabs defaultValue="submissions" className="h-full">
             <TabsList className="w-full">
               <TabsTrigger value="testcases" className="text-md flex-grow">
                 Testcases
@@ -103,7 +103,7 @@ export default async function Page({
             <TabsContent value="testcases">
               <Testcases />
             </TabsContent>
-            <TabsContent value="submissions">
+            <TabsContent value="submissions" className="h-full">
               <SubmissionsContextProvider>
                 <Submissions />
               </SubmissionsContextProvider>

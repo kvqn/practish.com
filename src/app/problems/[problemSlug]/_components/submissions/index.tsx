@@ -9,7 +9,7 @@ export function Submissions() {
   const { selectedSubmissionId } = useSubmissionsContext()
   if (!selectedSubmissionId)
     return (
-      <div className="flex flex-col gap-4 divide-y">
+      <div className="flex h-full flex-col gap-4">
         <SubmitPrompt />
         <PastSubmissions />
       </div>
