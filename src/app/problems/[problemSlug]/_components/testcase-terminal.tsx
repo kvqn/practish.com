@@ -64,7 +64,20 @@ export function TestcaseTerminal({ testcase }: { testcase: number }) {
     })()
   }, [problemId, testcase])
 
-  if (!session) return <div>loading</div>
+  if (!session)
+    return (
+      <div className="flex flex-col rounded-md border-4 border-gray-400 font-geist-mono">
+        <div className="flex h-80 flex-col overflow-scroll whitespace-pre-line bg-black px-2 py-1"></div>
+        <div className="flex">
+          <input
+            className={cn(
+              "flex-grow bg-neutral-800 px-2 py-1 text-white outline-none",
+            )}
+          />
+          <button className="w-20 select-none bg-green-800 px-2 text-neutral-200 hover:bg-green-700"></button>
+        </div>
+      </div>
+    )
 
   return (
     <div className="flex flex-col gap-4">

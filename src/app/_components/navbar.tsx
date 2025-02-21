@@ -19,8 +19,14 @@ function Logo() {
 
 export function Navbar() {
   return (
-    <div className="flex px-4 py-2">
+    <div className="flex items-center gap-8 px-4 py-2">
       <Logo />
+      <Link
+        href="/problems"
+        className="mt-1 text-gray-500 transition-colors hover:text-black"
+      >
+        Problems
+      </Link>
       <div className="ml-auto">
         <Options />
       </div>
