@@ -62,7 +62,7 @@ async function User() {
           </Button>  
         </div>
 
-        <Link href="/account" className="w-full">
+        <Link href="/settings" className="w-full">
           <Button variant="outline" className="mt-2 w-full">
             Settings
           </Button>
